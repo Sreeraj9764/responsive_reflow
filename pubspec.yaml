@@ -1,0 +1,38 @@
+name: responsive_reflow
+description: >-
+  Responsive & adaptive Flutter layout utilities — Material 3 window size-class
+  breakpoints, spacing tokens, adaptive navigation scaffold, responsive builders,
+  and foldable-aware helpers. Reflows by width; never pixel-scales.
+version: 1.0.0
+homepage: https://github.com/Sreeraj9764/responsive_reflow
+repository: https://github.com/Sreeraj9764/responsive_reflow
+issue_tracker: https://github.com/Sreeraj9764/responsive_reflow/issues
+topics:
+  - responsive
+  - adaptive
+  - layout
+  - breakpoints
+  - ui
+
+environment:
+  sdk: ^3.6.1
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  melos: ^7.7.0
+
+melos:
+  useRootAsPackage: true
+  command:
+    version:
+      linkToCommits: true
+      workspaceChangelog: false
+
+flutter:
