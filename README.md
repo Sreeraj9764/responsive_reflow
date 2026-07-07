@@ -6,6 +6,7 @@ Responsive & adaptive layout utilities for Flutter.
 [![Pub Points](https://img.shields.io/pub/points/responsive_reflow)](https://pub.dev/packages/responsive_reflow/score)
 [![GitHub License](https://img.shields.io/github/license/Sreeraj9764/responsive_reflow)](https://github.com/Sreeraj9764/responsive_reflow/blob/main/LICENSE)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Sreeraj9764/responsive__reflow-blue?logo=github)](https://github.com/Sreeraj9764/responsive_reflow)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg)](https://github.com/invertase/melos)
 
 Provides Material 3 window size-class breakpoints, spacing tokens, responsive
 builders, an adaptive navigation scaffold, input-density helpers, foldable
