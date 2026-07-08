@@ -14,6 +14,23 @@ awareness, and safe-area utilities — all built on official Flutter guidance.
 It **reflows** layouts by available width; it never pixel-scales like
 `flutter_screenutil` or `responsive_framework`'s `AutoScale`.
 
+## Contents
+
+- [Why reflow, not scale](#why-reflow-not-scale)
+- [Material 3 breakpoints](#material-3-breakpoints)
+- [Features](#features)
+- [Which tool do I reach for?](#which-tool-do-i-reach-for)
+- [Usage](#usage)
+- [Recipes](#recipes)
+  - [go_router: adaptive shell with StatefulShellRoute](#go_router-adaptive-shell-with-statefulshellroute)
+  - [go_router: sectioned sidebar with links](#go_router-sectioned-sidebar-with-links)
+  - [Adaptive list–detail (route on phones, pane on desktop)](#adaptive-listdetail-route-on-phones-pane-on-desktop)
+  - [Multiple shells (auth vs app)](#multiple-shells-auth-vs-app)
+  - [Other routers](#other-routers)
+  - [Smaller building blocks](#smaller-building-blocks)
+- [Migrating from flutter_screenutil](#migrating-from-flutter_screenutil)
+- [Best practices](#best-practices)
+
 ## Why reflow, not scale
 
 - **Width drives layout, never device type.** Decisions branch on the window
@@ -242,6 +259,293 @@ ReflowBreakpointsTheme(
   breakpoints: const ReflowBreakpoints(medium: 560, expanded: 900),
   child: app,
 )
+```
+
+## Recipes
+
+Real-world wiring for the widgets above. The go_router snippets are
+illustrative — this package has **no dependency on go_router**; it works with
+any routing solution (or none) because the scaffold only needs an index and a
+callback.
+
+### go_router: adaptive shell with StatefulShellRoute
+
+`ReflowAdaptiveScaffold` was designed to be the shell of a
+`StatefulShellRoute.indexedStack`. Each branch keeps its own navigator stack
+and scroll state; the scaffold swaps navigation chrome per breakpoint around
+the shell.
+
+```dart
+final router = GoRouter(
+  routes: [
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => AppShell(
+        navigationShell: navigationShell,
+      ),
+      branches: [
+        StatefulShellBranch(routes: [
+          GoRoute(path: '/home', builder: (_, __) => const HomePage()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(path: '/schedule', builder: (_, __) => const SchedulePage()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(path: '/settings', builder: (_, __) => const SettingsPage()),
+        ]),
+      ],
+    ),
+  ],
+);
+
+class AppShell extends StatelessWidget {
+  const AppShell({super.key, required this.navigationShell});
+
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReflowAdaptiveScaffold(
+      destinations: const [
+        ReflowDestination(icon: Icons.home_outlined, label: 'Home'),
+        ReflowDestination(icon: Icons.calendar_month_outlined, label: 'Schedule'),
+        ReflowDestination(icon: Icons.settings_outlined, label: 'Settings'),
+      ],
+      currentIndex: navigationShell.currentIndex,
+      onDestinationSelected: (index) => navigationShell.goBranch(
+        index,
+        // Re-tapping the active destination resets that branch to its root.
+        initialLocation: index == navigationShell.currentIndex,
+      ),
+      body: navigationShell,
+    );
+  }
+}
+```
+
+Notes:
+
+- The scaffold is **stateless with respect to navigation** — it only reflects
+  `currentIndex` and reports taps. All navigation state lives in the router.
+- Because each branch is preserved by `indexedStack`, switching
+  bottom bar ↔ rail ↔ sidebar on window resize does not lose branch state.
+- Give branch pages a `ReflowPageContent` root so their content stays readable
+  when the window is wide.
+
+### go_router: sectioned sidebar with links
+
+Dashboards often mix *primary* destinations (shell branches) with *secondary*
+pages that live inside a branch (profile, help, …). Use
+`ReflowAdaptiveScaffold.sectioned`: branches participate in selection and the
+compact bottom bar, links just navigate.
+
+```dart
+ReflowAdaptiveScaffold.sectioned(
+  sections: [
+    const ReflowNavSection(
+      title: 'MAIN',
+      items: [
+        ReflowNavItem.branch(
+          icon: Icons.dashboard_outlined,
+          label: 'Dashboard',
+          branchIndex: 0,
+          showInBottomBar: true,
+        ),
+        ReflowNavItem.branch(
+          icon: Icons.bar_chart_outlined,
+          label: 'Reports',
+          branchIndex: 1,
+          showInBottomBar: true,
+        ),
+      ],
+    ),
+    ReflowNavSection(
+      title: 'ACCOUNT',
+      items: [
+        ReflowNavItem.link(
+          icon: Icons.person_outline,
+          label: 'Profile',
+          // Highlight the link when its page is the current location.
+          selected: GoRouterState.of(context).uri.path == '/settings/profile',
+          onTap: () => context.go('/settings/profile'),
+        ),
+      ],
+    ),
+  ],
+  currentIndex: navigationShell.currentIndex,
+  onDestinationSelected: navigationShell.goBranch,
+  body: navigationShell,
+)
+```
+
+Notes:
+
+- Only branch items with `showInBottomBar: true` appear in the compact bottom
+  bar; links never do. If nothing opts in, the scaffold falls back to all
+  branch items (and hides the bar entirely if fewer than two exist).
+- Derive a link's `selected:` from the current location so the sidebar
+  highlight follows deep links and back navigation, not just taps.
+
+### Adaptive list–detail (route on phones, pane on desktop)
+
+The canonical adaptive pattern: selecting an item **pushes a route** on
+compact windows but **fills the secondary pane** on expanded+ windows.
+Keep the selection in state; branch in the tap handler.
+
+```dart
+class InboxScreen extends StatefulWidget {
+  const InboxScreen({super.key});
+
+  @override
+  State<InboxScreen> createState() => _InboxScreenState();
+}
+
+class _InboxScreenState extends State<InboxScreen> {
+  Message? _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ReflowAdaptiveScaffold(
+      destinations: destinations,
+      currentIndex: 0,
+      onDestinationSelected: onSelect,
+      body: MessageList(
+        selected: _selected,
+        onMessageTap: (message) {
+          if (context.reflow.isDesktopLayout) {
+            // Wide window → show it in the detail pane.
+            setState(() => _selected = message);
+          } else {
+            // Phone-sized window → navigate to a full detail page.
+            context.push('/inbox/${message.id}');
+          }
+        },
+      ),
+      secondaryBody: _selected == null
+          ? const EmptyDetailPlaceholder()
+          : MessageDetail(message: _selected!),
+      bodyRatio: 0.4, // 40% list, 60% detail
+    );
+  }
+}
+```
+
+Notes:
+
+- Also register the `/inbox/:id` route — it serves compact windows *and* makes
+  detail pages deep-linkable on every size.
+- `secondaryBody` is automatically hidden below expanded, and on foldables the
+  panes split at the hinge instead of `bodyRatio`.
+- If the user resizes from compact to expanded while a pushed detail page is
+  open, pop it and promote the selection to the pane (listen to the breakpoint
+  in `didChangeDependencies` or compare in `build`).
+
+### Multiple shells (auth vs app)
+
+Different areas of an app can use different shells. Only the signed-in area
+needs adaptive navigation:
+
+```dart
+final router = GoRouter(
+  routes: [
+    // Auth flow: plain pages, no navigation chrome.
+    GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
+    GoRoute(path: '/signup', builder: (_, __) => const SignupPage()),
+
+    // Signed-in area: adaptive shell.
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, shell) => AppShell(navigationShell: shell),
+      branches: [/* … */],
+    ),
+  ],
+);
+```
+
+Nested shells also work: a branch page can host its own `TabBar` or a nested
+`StatefulShellRoute` — `ReflowAdaptiveScaffold` only owns the *outer* chrome
+(bottom bar / rail / sidebar) and never touches inner navigators. Wrap inner
+layouts in `ReflowConstraintResponsiveBuilder` so they adapt to the space that
+remains after the sidebar takes its width.
+
+### Other routers
+
+The scaffold needs only `currentIndex` + `onDestinationSelected`, so any
+state-driven approach works:
+
+- **Navigator 1.0 / no router** — keep an index in state and swap bodies
+  (see [example/lib/main.dart](example/lib/main.dart)):
+
+  ```dart
+  ReflowAdaptiveScaffold(
+    destinations: destinations,
+    currentIndex: _index,
+    onDestinationSelected: (i) => setState(() => _index = i),
+    body: IndexedStack(index: _index, children: pages),
+  )
+  ```
+
+- **auto_route** — wrap with `AutoTabsRouter` and map
+  `tabsRouter.activeIndex` → `currentIndex` and
+  `tabsRouter.setActiveIndex` → `onDestinationSelected`.
+- **beamer** — use a `BeamerDelegate` per tab and drive `currentIndex` from
+  the active delegate, calling `beamer.update()` on selection.
+
+### Smaller building blocks
+
+**`ReflowPointerModeDetector`** — install once at the root via
+`MaterialApp.builder` so the whole app densifies for mouse users:
+
+```dart
+MaterialApp.router(
+  routerConfig: router,
+  builder: (context, child) => ReflowPointerModeDetector(
+    builder: (context, mode) => Theme(
+      data: Theme.of(context).copyWith(
+        visualDensity: ReflowDensity.densityFor(mode),
+      ),
+      child: child!,
+    ),
+  ),
+)
+```
+
+**`ReflowPolicy`** — size-based decisions outside the widget tree (blocs,
+controllers, tests) without importing widget code:
+
+```dart
+const policy = ReflowPolicy();
+if (policy.shouldUseMultiPane(windowWidth)) { /* preload detail data */ }
+
+// In tests: verify decisions at exact widths, no widget pumping needed.
+expect(policy.shouldUseSidebar(840), isTrue);
+```
+
+**`ReflowInsets`** — targeted MediaQuery lookups that only rebuild on the
+relevant change:
+
+```dart
+// Hide the FAB while the keyboard is open:
+floatingActionButton:
+    ReflowInsets.keyboardVisible(context) ? null : const AddButton(),
+```
+
+**`ReflowSafeArea`** — wrap the *body*, not the whole `Scaffold`, so the app
+bar keeps managing its own insets:
+
+```dart
+Scaffold(
+  appBar: AppBar(title: const Text('Title')),
+  body: ReflowSafeArea(top: false, child: content),
+)
+```
+
+**`ReflowDisplayFeatures`** — manual hinge handling when you are not using
+`secondaryBody`:
+
+```dart
+final fold = ReflowDisplayFeatures.verticalFold(context);
+if (fold != null) {
+  // Build your own two-pane layout on either side of fold.bounds.
+}
 ```
 
 ## Migrating from flutter_screenutil
