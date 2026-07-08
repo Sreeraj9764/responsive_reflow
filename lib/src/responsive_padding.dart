@@ -62,7 +62,10 @@ class ReflowResponsivePadding extends StatelessWidget {
 }
 
 /// Returns breakpoint-appropriate horizontal padding value.
-double gsResponsiveHorizontalPadding(BuildContext context) {
+///
+/// Scales with the window breakpoint: 16 (compact), 24 (medium),
+/// 32 (expanded), 48 (large and above).
+double reflowHorizontalPadding(BuildContext context) {
   final breakpoint = ReflowBreakpoint.of(context);
   return switch (breakpoint) {
     ReflowBreakpoint.extraLarge || ReflowBreakpoint.large => ReflowSpacing.xxxl,
@@ -71,3 +74,22 @@ double gsResponsiveHorizontalPadding(BuildContext context) {
     ReflowBreakpoint.compact => ReflowSpacing.lg,
   };
 }
+
+/// Returns breakpoint-appropriate vertical padding value.
+///
+/// Scales with the window breakpoint: 16 (compact/medium), 24 (expanded),
+/// 32 (large and above).
+double reflowVerticalPadding(BuildContext context) {
+  final breakpoint = ReflowBreakpoint.of(context);
+  return switch (breakpoint) {
+    ReflowBreakpoint.extraLarge || ReflowBreakpoint.large => ReflowSpacing.xxl,
+    ReflowBreakpoint.expanded => ReflowSpacing.xl,
+    ReflowBreakpoint.medium || ReflowBreakpoint.compact => ReflowSpacing.lg,
+  };
+}
+
+/// Returns breakpoint-appropriate horizontal padding value.
+@Deprecated('Use reflowHorizontalPadding instead. '
+    'This alias will be removed in the next major release.')
+double gsResponsiveHorizontalPadding(BuildContext context) =>
+    reflowHorizontalPadding(context);

@@ -67,14 +67,17 @@ class ReflowPointerModeDetector extends StatefulWidget {
   const ReflowPointerModeDetector({
     super.key,
     required this.builder,
-    this.initialMode = ReflowInputMode.touch,
+    this.initialMode,
   });
 
   /// Builds the subtree given the most recently observed [ReflowInputMode].
   final Widget Function(BuildContext context, ReflowInputMode mode) builder;
 
   /// Mode used before any pointer event is observed.
-  final ReflowInputMode initialMode;
+  ///
+  /// Defaults to the platform heuristic ([ReflowDensity.inputMode]) so that
+  /// desktop and web start in pointer mode instead of briefly reporting touch.
+  final ReflowInputMode? initialMode;
 
   @override
   State<ReflowPointerModeDetector> createState() =>
@@ -82,7 +85,7 @@ class ReflowPointerModeDetector extends StatefulWidget {
 }
 
 class _ReflowPointerModeDetectorState extends State<ReflowPointerModeDetector> {
-  late ReflowInputMode _mode = widget.initialMode;
+  late ReflowInputMode _mode = widget.initialMode ?? ReflowDensity.inputMode;
 
   void _update(PointerEvent event) {
     final next = switch (event.kind) {

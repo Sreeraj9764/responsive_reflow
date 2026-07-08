@@ -29,20 +29,23 @@ class ReflowResponsiveBuilder extends StatelessWidget {
           'Provide at least one layout builder (compact, medium, expanded) or a generic builder.',
         );
 
-  /// Layout for compact screens (<640px). Falls back to this if larger
-  /// breakpoints are not provided.
+  /// Layout for compact windows (<600px by default). Falls back to this if
+  /// larger breakpoints are not provided.
   final WidgetBuilder? compact;
 
-  /// Layout for medium screens (640–767px). Falls back to [compact].
+  /// Layout for medium windows (600–839px by default). Falls back to [compact].
   final WidgetBuilder? medium;
 
-  /// Layout for expanded screens (768–1023px). Falls back to [medium] → [compact].
+  /// Layout for expanded windows (840–1199px by default).
+  /// Falls back to [medium] → [compact].
   final WidgetBuilder? expanded;
 
-  /// Layout for large screens (1024–1279px). Falls back to [expanded] → [medium] → [compact].
+  /// Layout for large windows (1200–1599px by default).
+  /// Falls back to [expanded] → [medium] → [compact].
   final WidgetBuilder? large;
 
-  /// Layout for extra large screens (≥1280px). Falls back to [large] → [expanded] → [medium] → [compact].
+  /// Layout for extra large windows (≥1600px by default).
+  /// Falls back to [large] → [expanded] → [medium] → [compact].
   final WidgetBuilder? extraLarge;
 
   /// Generic builder that receives the current [ReflowBreakpoint].
@@ -79,6 +82,9 @@ class ReflowResponsiveBuilder extends StatelessWidget {
 /// Use this for reusable components that need to adapt to their
 /// available space regardless of window size.
 ///
+/// Honours a [ReflowBreakpointsTheme] ancestor if one is present, otherwise
+/// classifies the constraint width with the Material 3 default thresholds.
+///
 /// ```dart
 /// ReflowConstraintResponsiveBuilder(
 ///   compact: (context, constraints) => CompactCard(),
@@ -110,7 +116,8 @@ class ReflowConstraintResponsiveBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final breakpoint = ReflowBreakpoint.fromWidth(constraints.maxWidth);
+        final breakpoint =
+            ReflowBreakpoints.of(context).fromWidth(constraints.maxWidth);
 
         final resolved = switch (breakpoint) {
           ReflowBreakpoint.extraLarge ||

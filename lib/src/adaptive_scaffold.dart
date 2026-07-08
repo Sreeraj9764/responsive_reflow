@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'breakpoints.dart';
+import 'display_features.dart';
 import 'spacing.dart';
 
 /// A navigation destination used by [ReflowAdaptiveScaffold].
@@ -148,6 +149,8 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
     required this.currentIndex,
     required this.onDestinationSelected,
     required this.body,
+    this.secondaryBody,
+    this.bodyRatio = 0.5,
     this.appBar,
     this.showAppBarOnDesktop = false,
     this.floatingActionButton,
@@ -162,7 +165,9 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
     this.animateTransitions = true,
   })  : sections = null,
         mediumNavStyle = ReflowMediumNavStyle.rail,
-        assert(destinations.length >= 2, 'Provide at least 2 destinations.');
+        assert(destinations.length >= 2, 'Provide at least 2 destinations.'),
+        assert(bodyRatio > 0 && bodyRatio < 1,
+            'bodyRatio must be between 0 and 1 (exclusive).');
 
   /// Creates an adaptive scaffold from grouped [sections]. The sidebar renders
   /// section headers, primary branch destinations, and secondary links. The
@@ -173,6 +178,8 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
     required this.currentIndex,
     required this.onDestinationSelected,
     required this.body,
+    this.secondaryBody,
+    this.bodyRatio = 0.5,
     this.appBar,
     this.showAppBarOnDesktop = false,
     this.floatingActionButton,
@@ -186,7 +193,9 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
     this.backgroundColor,
     this.sidebarBackgroundColor,
     this.animateTransitions = true,
-  }) : destinations = null;
+  })  : destinations = null,
+        assert(bodyRatio > 0 && bodyRatio < 1,
+            'bodyRatio must be between 0 and 1 (exclusive).');
 
   /// Flat navigation destinations (default constructor). Null when [sections]
   /// is used.
@@ -204,6 +213,17 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
 
   /// The main body content (typically a `StatefulNavigationShell`).
   final Widget body;
+
+  /// Optional secondary pane shown next to [body] on expanded and larger
+  /// windows (list–detail pattern). Hidden on compact and medium windows.
+  ///
+  /// When the window is split by a vertical fold/hinge, the two panes are
+  /// placed on either side of the fold instead of using [bodyRatio].
+  final Widget? secondaryBody;
+
+  /// Fraction of the available width given to [body] when [secondaryBody]
+  /// is visible. Must be between 0 and 1 (exclusive). Defaults to 0.5.
+  final double bodyRatio;
 
   /// Optional app bar. Shown on compact/medium layouts and, when
   /// [showAppBarOnDesktop] is true, on expanded+ layouts as well.
@@ -321,9 +341,49 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
     );
   }
 
+  /// Resolves the body area: the primary [body] alone, or a two-pane
+  /// split with [secondaryBody] on expanded+ windows (fold-aware).
+  Widget _buildBodyArea(BuildContext context, double navWidth) {
+    final secondary = secondaryBody;
+    if (secondary == null) return body;
+
+    final breakpoint = ReflowBreakpoint.of(context);
+    if (breakpoint < ReflowBreakpoint.expanded) return body;
+
+    // Fold-aware: split the panes at the hinge rather than by ratio.
+    final fold = ReflowDisplayFeatures.verticalFold(context);
+    if (fold != null) {
+      final primaryWidth = fold.bounds.left - navWidth;
+      if (primaryWidth > 0) {
+        return Row(
+          children: [
+            SizedBox(width: primaryWidth, child: body),
+            SizedBox(width: fold.bounds.width),
+            Expanded(child: secondary),
+          ],
+        );
+      }
+    }
+
+    final primaryFlex = (bodyRatio * 1000).round();
+    return Row(
+      children: [
+        Expanded(flex: primaryFlex, child: body),
+        const VerticalDivider(thickness: 1, width: 1),
+        Expanded(flex: 1000 - primaryFlex, child: secondary),
+      ],
+    );
+  }
+
   /// Default Material bottom bar built from the bottom-bar branch items.
-  Widget _defaultBottomBar() {
-    final items = _bottomBarItems;
+  ///
+  /// In sectioned mode, falls back to all branch items when no item opted in
+  /// via `showInBottomBar`. Returns null (no bottom bar) when fewer than two
+  /// items are available, since [NavigationBar] requires at least two.
+  Widget? _defaultBottomBar() {
+    var items = _bottomBarItems;
+    if (items.isEmpty) items = _branchItems;
+    if (items.length < 2) return null;
     final selected = items.indexWhere((it) => it.branchIndex == currentIndex);
     return NavigationBar(
       selectedIndex: selected < 0 ? 0 : selected,
@@ -371,7 +431,7 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
                 .toList(),
           ),
           const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: body),
+          Expanded(child: _buildBodyArea(context, railWidth)),
         ],
       ),
     );
@@ -396,7 +456,7 @@ class ReflowAdaptiveScaffold extends StatelessWidget {
             header: sidebarHeader,
             footer: sidebarFooter,
           ),
-          Expanded(child: body),
+          Expanded(child: _buildBodyArea(context, sidebarWidth)),
         ],
       ),
     );

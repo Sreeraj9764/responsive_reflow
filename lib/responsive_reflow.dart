@@ -6,6 +6,7 @@ library;
 
 export 'src/breakpoints.dart';
 export 'src/spacing.dart';
+export 'src/reflow_context.dart';
 export 'src/responsive_builder.dart';
 export 'src/responsive_widgets.dart';
 export 'src/adaptive_scaffold.dart';

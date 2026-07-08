@@ -82,7 +82,7 @@ class ReflowPageContent extends StatelessWidget {
   final double maxWidth;
 
   /// Explicit padding override. When null, horizontal padding scales with the
-  /// breakpoint (see [gsResponsiveHorizontalPadding]) and vertical padding
+  /// breakpoint (see [reflowHorizontalPadding]) and vertical padding
   /// uses [verticalPadding].
   final EdgeInsetsGeometry? padding;
 
@@ -107,7 +107,7 @@ class ReflowPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final resolvedPadding = padding ??
         EdgeInsets.symmetric(
-          horizontal: gsResponsiveHorizontalPadding(context),
+          horizontal: reflowHorizontalPadding(context),
           vertical: verticalPadding,
         );
 
