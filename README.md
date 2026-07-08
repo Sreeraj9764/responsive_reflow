@@ -25,41 +25,41 @@ It **reflows** layouts by available width; it never pixel-scales like
 
 ## Material 3 breakpoints
 
-| Window size class | Width (logical px) | `RrBreakpoint`        | Typical navigation        |
+| Window size class | Width (logical px) | `ReflowBreakpoint`        | Typical navigation        |
 | ----------------- | ------------------ | --------------------- | ------------------------- |
-| Compact           | `< 600`            | `RrBreakpoint.compact`    | Bottom navigation bar |
-| Medium            | `600 – 839`        | `RrBreakpoint.medium`     | Navigation rail (icons) |
-| Expanded          | `840 – 1199`       | `RrBreakpoint.expanded`   | Full sidebar          |
-| Large             | `1200 – 1599`      | `RrBreakpoint.large`      | Full sidebar          |
-| Extra large       | `≥ 1600`           | `RrBreakpoint.extraLarge` | Full sidebar          |
+| Compact           | `< 600`            | `ReflowBreakpoint.compact`    | Bottom navigation bar |
+| Medium            | `600 – 839`        | `ReflowBreakpoint.medium`     | Navigation rail (icons) |
+| Expanded          | `840 – 1199`       | `ReflowBreakpoint.expanded`   | Full sidebar          |
+| Large             | `1200 – 1599`      | `ReflowBreakpoint.large`      | Full sidebar          |
+| Extra large       | `≥ 1600`           | `ReflowBreakpoint.extraLarge` | Full sidebar          |
 
 Thresholds are configurable — see [Configurable breakpoints](#configurable-breakpoints).
 
 ## Features
 
-- **Breakpoints** — `RrBreakpoint` enum with comparison operators
+- **Breakpoints** — `ReflowBreakpoint` enum with comparison operators
   (`>=`, `>`, `<=`, `<`) and helpers (`isCompact`, `isExpanded`, `showsSidebar`,
   `isMobileLayout`, `isDesktopLayout`).
-- **Configurable thresholds** — `RrBreakpoints` (immutable config) +
-  `RrBreakpointsTheme` (inherited override for a subtree).
-- **Spacing tokens** — `RrSpacing`, `RrEdgeInsets`, `RrGap`, `RrRadius`.
-- **Responsive builders** — `RrResponsiveBuilder` (window) and
-  `RrConstraintResponsiveBuilder` (parent constraints), both with
+- **Configurable thresholds** — `ReflowBreakpoints` (immutable config) +
+  `ReflowBreakpointsTheme` (inherited override for a subtree).
+- **Spacing tokens** — `ReflowSpacing`, `ReflowEdgeInsets`, `ReflowGap`, `ReflowRadius`.
+- **Responsive builders** — `ReflowResponsiveBuilder` (window) and
+  `ReflowConstraintResponsiveBuilder` (parent constraints), both with
   smaller-to-larger cascade fallback.
-- **Responsive values & widgets** — `RrResponsiveValue<T>`,
-  `RrResponsiveVisibility`, `RrResponsiveRowColumn`.
-- **Adaptive scaffold** — `RrAdaptiveScaffold` auto-switches bottom nav → rail →
+- **Responsive values & widgets** — `ReflowResponsiveValue<T>`,
+  `ReflowResponsiveVisibility`, `ReflowResponsiveRowColumn`.
+- **Adaptive scaffold** — `ReflowAdaptiveScaffold` auto-switches bottom nav → rail →
   sidebar, with FAB, optional desktop app bar, and animated transitions.
-- **Constrained content** — `ConstrainedContent`, `RrPageContent`
+- **Constrained content** — `ConstrainedContent`, `ReflowPageContent`
   (max-width + responsive padding + safe area + scroll-position restoration).
-- **Responsive grid** — `RrResponsiveGrid` and `RrResponsiveGrid.builder`
+- **Responsive grid** — `ReflowResponsiveGrid` and `ReflowResponsiveGrid.builder`
   (lazy) with width-derived column counts.
-- **Input density** — `RrDensity` / `RrPointerModeDetector` for touch-vs-pointer
+- **Input density** — `ReflowDensity` / `ReflowPointerModeDetector` for touch-vs-pointer
   `VisualDensity`.
-- **Policy & capabilities** — `RrPolicy` (size-based decisions) and
-  `RrCapability` (hardware/runtime facts).
-- **Foldable awareness** — `RrDisplayFeatures` (hinge/fold detection).
-- **Safe area & insets** — `RrSafeArea`, `RrInsets`.
+- **Policy & capabilities** — `ReflowPolicy` (size-based decisions) and
+  `ReflowCapability` (hardware/runtime facts).
+- **Foldable awareness** — `ReflowDisplayFeatures` (hinge/fold detection).
+- **Safe area & insets** — `ReflowSafeArea`, `ReflowInsets`.
 
 ## Usage
 
@@ -70,7 +70,7 @@ import 'package:responsive_reflow/responsive_reflow.dart';
 ### Responsive builder
 
 ```dart
-RrResponsiveBuilder(
+ReflowResponsiveBuilder(
   compact: (context) => MobileLayout(),
   expanded: (context) => DesktopLayout(),
 )
@@ -79,7 +79,7 @@ RrResponsiveBuilder(
 ### Responsive value
 
 ```dart
-final columns = const RrResponsiveValue<int>(
+final columns = const ReflowResponsiveValue<int>(
   compact: 1,
   medium: 2,
   expanded: 3,
@@ -89,14 +89,14 @@ final columns = const RrResponsiveValue<int>(
 ### Responsive visibility & row/column
 
 ```dart
-RrResponsiveVisibility(
-  visibleFrom: RrBreakpoint.expanded,
+ReflowResponsiveVisibility(
+  visibleFrom: ReflowBreakpoint.expanded,
   child: SecondaryPanel(),
 )
 
-RrResponsiveRowColumn(
-  rowFrom: RrBreakpoint.medium,
-  spacing: RrSpacing.lg,
+ReflowResponsiveRowColumn(
+  rowFrom: ReflowBreakpoint.medium,
+  spacing: ReflowSpacing.lg,
   children: [LabelField(), ValueField()],
 )
 ```
@@ -104,17 +104,17 @@ RrResponsiveRowColumn(
 ### Spacing tokens
 
 ```dart
-Padding(padding: RrEdgeInsets.allLg, child: content)
-Column(children: [widget1, RrGap.verticalSm, widget2])
+Padding(padding: ReflowEdgeInsets.allLg, child: content)
+Column(children: [widget1, ReflowGap.verticalSm, widget2])
 ```
 
 ### Adaptive scaffold
 
 ```dart
-RrAdaptiveScaffold(
+ReflowAdaptiveScaffold(
   destinations: const [
-    RrDestination(icon: Icons.home, label: 'Home'),
-    RrDestination(icon: Icons.calendar_month, label: 'Schedule'),
+    ReflowDestination(icon: Icons.home, label: 'Home'),
+    ReflowDestination(icon: Icons.calendar_month, label: 'Schedule'),
   ],
   currentIndex: navigationShell.currentIndex,
   onDestinationSelected: navigationShell.goBranch,
@@ -126,7 +126,7 @@ RrAdaptiveScaffold(
 ### Page content
 
 ```dart
-RrPageContent(
+ReflowPageContent(
   maxWidth: 1000,
   child: Column(children: [...]),
 )
@@ -135,7 +135,7 @@ RrPageContent(
 ### Responsive grid (lazy)
 
 ```dart
-RrResponsiveGrid.builder(
+ReflowResponsiveGrid.builder(
   maxItemWidth: 300,
   itemCount: items.length,
   itemBuilder: (context, i) => ItemCard(items[i]),
@@ -146,7 +146,7 @@ RrResponsiveGrid.builder(
 
 ```dart
 Theme(
-  data: Theme.of(context).copyWith(visualDensity: RrDensity.density),
+  data: Theme.of(context).copyWith(visualDensity: ReflowDensity.density),
   child: child,
 )
 ```
@@ -154,8 +154,8 @@ Theme(
 ### Configurable breakpoints
 
 ```dart
-RrBreakpointsTheme(
-  breakpoints: const RrBreakpoints(medium: 560, expanded: 900),
+ReflowBreakpointsTheme(
+  breakpoints: const ReflowBreakpoints(medium: 560, expanded: 900),
   child: app,
 )
 ```

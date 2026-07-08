@@ -7,17 +7,17 @@
 
 Initial public release.
 
-- Material 3 window size-class breakpoints (`RrBreakpoint`, `RrBreakpoints`,
-  `RrBreakpointsTheme`) with configurable thresholds.
-- Spacing tokens: `RrSpacing`, `RrEdgeInsets`, `RrGap`, `RrRadius`.
-- Responsive builders: `RrResponsiveBuilder`,
-  `RrConstraintResponsiveBuilder`, with smaller-to-larger cascade fallback.
-- Responsive values & widgets: `RrResponsiveValue<T>`,
-  `RrResponsiveVisibility`, `RrResponsiveRowColumn`.
-- Adaptive navigation scaffold `RrAdaptiveScaffold` (bottom nav → rail → sidebar).
-- Constrained content: `ConstrainedContent`, `RrPageContent`.
-- Responsive grid: `RrResponsiveGrid` and `RrResponsiveGrid.builder`.
-- Input density helpers: `RrDensity`, `RrPointerModeDetector`.
-- Policy & capabilities: `RrPolicy`, `RrCapability`.
-- Foldable awareness: `RrDisplayFeatures`.
-- Safe-area & insets: `RrSafeArea`, `RrInsets`.
+- Material 3 window size-class breakpoints (`ReflowBreakpoint`, `ReflowBreakpoints`,
+  `ReflowBreakpointsTheme`) with configurable thresholds.
+- Spacing tokens: `ReflowSpacing`, `ReflowEdgeInsets`, `ReflowGap`, `ReflowRadius`.
+- Responsive builders: `ReflowResponsiveBuilder`,
+  `ReflowConstraintResponsiveBuilder`, with smaller-to-larger cascade fallback.
+- Responsive values & widgets: `ReflowResponsiveValue<T>`,
+  `ReflowResponsiveVisibility`, `ReflowResponsiveRowColumn`.
+- Adaptive navigation scaffold `ReflowAdaptiveScaffold` (bottom nav → rail → sidebar).
+- Constrained content: `ConstrainedContent`, `ReflowPageContent`.
+- Responsive grid: `ReflowResponsiveGrid` and `ReflowResponsiveGrid.builder`.
+- Input density helpers: `ReflowDensity`, `ReflowPointerModeDetector`.
+- Policy & capabilities: `ReflowPolicy`, `ReflowCapability`.
+- Foldable awareness: `ReflowDisplayFeatures`.
+- Safe-area & insets: `ReflowSafeArea`, `ReflowInsets`.

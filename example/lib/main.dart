@@ -16,8 +16,8 @@ class ExampleApp extends StatelessWidget {
   }
 }
 
-/// Demonstrates [RrAdaptiveScaffold] (bottom nav → rail → sidebar),
-/// [RrResponsiveGrid], and spacing tokens — all width-driven, never scaled.
+/// Demonstrates [ReflowAdaptiveScaffold] (bottom nav → rail → sidebar),
+/// [ReflowResponsiveGrid], and spacing tokens — all width-driven, never scaled.
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -30,22 +30,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return RrAdaptiveScaffold(
+    return ReflowAdaptiveScaffold(
       destinations: const [
-        RrDestination(icon: Icons.home_outlined, label: 'Home'),
-        RrDestination(icon: Icons.grid_view_outlined, label: 'Grid'),
-        RrDestination(icon: Icons.settings_outlined, label: 'Settings'),
+        ReflowDestination(icon: Icons.home_outlined, label: 'Home'),
+        ReflowDestination(icon: Icons.grid_view_outlined, label: 'Grid'),
+        ReflowDestination(icon: Icons.settings_outlined, label: 'Settings'),
       ],
       currentIndex: _index,
       onDestinationSelected: (i) => setState(() => _index = i),
-      body: RrPageContent(
+      body: ReflowPageContent(
         maxWidth: 1000,
-        child: RrResponsiveGrid.builder(
+        child: ReflowResponsiveGrid.builder(
           maxItemWidth: 260,
           itemCount: 12,
           itemBuilder: (context, i) => Card(
             child: Padding(
-              padding: RrEdgeInsets.allLg,
+              padding: ReflowEdgeInsets.allLg,
               child: Center(child: Text('Item ${i + 1}')),
             ),
           ),

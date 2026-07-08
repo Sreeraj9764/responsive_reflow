@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 ///
 /// Use these to lay out two-pane UIs that respect a device hinge or fold,
 /// rather than rendering content underneath it.
-abstract final class RrDisplayFeatures {
+abstract final class ReflowDisplayFeatures {
   /// Returns the display features (hinges, folds, cutouts) for [context].
   static List<DisplayFeature> of(BuildContext context) =>
       MediaQuery.displayFeaturesOf(context);

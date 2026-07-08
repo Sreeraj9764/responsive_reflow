@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 /// [Material 3 window size classes](https://m3.material.io/foundations/layout/applying-layout/window-size-classes).
 ///
 /// Branch on the window **size**, never on the device type. The thresholds
-/// can be customised per app via [RrBreakpointsTheme]; the defaults follow
+/// can be customised per app via [ReflowBreakpointsTheme]; the defaults follow
 /// the Material 3 recommendation:
 ///
 /// - compact: phones (<600px) — bottom navigation, single column
@@ -12,7 +12,7 @@ import 'package:flutter/widgets.dart';
 /// - expanded: tablet landscape / small desktops (840–1199px) — multi-pane
 /// - large: desktops (1200–1599px) — full multi-pane with sidebar
 /// - extraLarge: wide desktops (≥1600px)
-enum RrBreakpoint {
+enum ReflowBreakpoint {
   compact,
   medium,
   expanded,
@@ -21,66 +21,66 @@ enum RrBreakpoint {
 
   /// Returns the breakpoint for [width] using the Material 3 default
   /// thresholds. To honour app-level overrides, prefer [of] or
-  /// [RrBreakpoints.fromWidth].
-  static RrBreakpoint fromWidth(double width) =>
-      RrBreakpoints.material3.fromWidth(width);
+  /// [ReflowBreakpoints.fromWidth].
+  static ReflowBreakpoint fromWidth(double width) =>
+      ReflowBreakpoints.material3.fromWidth(width);
 
   /// Returns the current breakpoint using [MediaQuery.sizeOf].
   ///
-  /// Honours a [RrBreakpointsTheme] ancestor if one is present, otherwise
+  /// Honours a [ReflowBreakpointsTheme] ancestor if one is present, otherwise
   /// falls back to the Material 3 default thresholds.
-  static RrBreakpoint of(BuildContext context) {
+  static ReflowBreakpoint of(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    return RrBreakpoints.of(context).fromWidth(width);
+    return ReflowBreakpoints.of(context).fromWidth(width);
   }
 
   /// Whether this breakpoint is at least [other].
-  bool operator >=(RrBreakpoint other) => index >= other.index;
+  bool operator >=(ReflowBreakpoint other) => index >= other.index;
 
   /// Whether this breakpoint is greater than [other].
-  bool operator >(RrBreakpoint other) => index > other.index;
+  bool operator >(ReflowBreakpoint other) => index > other.index;
 
   /// Whether this breakpoint is at most [other].
-  bool operator <=(RrBreakpoint other) => index <= other.index;
+  bool operator <=(ReflowBreakpoint other) => index <= other.index;
 
   /// Whether this breakpoint is less than [other].
-  bool operator <(RrBreakpoint other) => index < other.index;
+  bool operator <(ReflowBreakpoint other) => index < other.index;
 
   /// Whether the current breakpoint shows a bottom navigation bar.
-  bool get isCompact => this == RrBreakpoint.compact;
+  bool get isCompact => this == ReflowBreakpoint.compact;
 
   /// Whether the current breakpoint shows a navigation rail.
-  bool get isMedium => this == RrBreakpoint.medium;
+  bool get isMedium => this == ReflowBreakpoint.medium;
 
   /// Whether the current breakpoint is expanded.
-  bool get isExpanded => this == RrBreakpoint.expanded;
+  bool get isExpanded => this == ReflowBreakpoint.expanded;
 
   /// Whether the current breakpoint is large.
-  bool get isLarge => this == RrBreakpoint.large;
+  bool get isLarge => this == ReflowBreakpoint.large;
 
   /// Whether the current breakpoint is extra large.
-  bool get isExtraLarge => this == RrBreakpoint.extraLarge;
+  bool get isExtraLarge => this == ReflowBreakpoint.extraLarge;
 
   /// Whether the current breakpoint shows a full sidebar.
-  bool get showsSidebar => index >= RrBreakpoint.expanded.index;
+  bool get showsSidebar => index >= ReflowBreakpoint.expanded.index;
 
   /// Whether the current breakpoint is mobile-like (compact or medium).
-  bool get isMobileLayout => index <= RrBreakpoint.medium.index;
+  bool get isMobileLayout => index <= ReflowBreakpoint.medium.index;
 
   /// Whether the current breakpoint is desktop-like (expanded or larger).
-  bool get isDesktopLayout => index >= RrBreakpoint.expanded.index;
+  bool get isDesktopLayout => index >= ReflowBreakpoint.expanded.index;
 }
 
-/// The set of width thresholds that map a window width to a [RrBreakpoint].
+/// The set of width thresholds that map a window width to a [ReflowBreakpoint].
 ///
 /// Each threshold marks the **lower bound** (inclusive) of the corresponding
-/// breakpoint. Anything below [medium] is [RrBreakpoint.compact].
+/// breakpoint. Anything below [medium] is [ReflowBreakpoint.compact].
 ///
-/// The Material 3 defaults are exposed via [RrBreakpoints.material3]. Apps may
-/// provide custom thresholds and share them through [RrBreakpointsTheme].
+/// The Material 3 defaults are exposed via [ReflowBreakpoints.material3]. Apps may
+/// provide custom thresholds and share them through [ReflowBreakpointsTheme].
 @immutable
-class RrBreakpoints {
-  const RrBreakpoints({
+class ReflowBreakpoints {
+  const ReflowBreakpoints({
     this.medium = 600,
     this.expanded = 840,
     this.large = 1200,
@@ -95,51 +95,51 @@ class RrBreakpoints {
         );
 
   /// Material 3 window size class thresholds (600 / 840 / 1200 / 1600).
-  static const RrBreakpoints material3 = RrBreakpoints();
+  static const ReflowBreakpoints material3 = ReflowBreakpoints();
 
-  /// Lower bound (inclusive) of [RrBreakpoint.medium].
+  /// Lower bound (inclusive) of [ReflowBreakpoint.medium].
   final double medium;
 
-  /// Lower bound (inclusive) of [RrBreakpoint.expanded].
+  /// Lower bound (inclusive) of [ReflowBreakpoint.expanded].
   final double expanded;
 
-  /// Lower bound (inclusive) of [RrBreakpoint.large].
+  /// Lower bound (inclusive) of [ReflowBreakpoint.large].
   final double large;
 
-  /// Lower bound (inclusive) of [RrBreakpoint.extraLarge].
+  /// Lower bound (inclusive) of [ReflowBreakpoint.extraLarge].
   final double extraLarge;
 
-  /// Maps a window [width] to its [RrBreakpoint].
-  RrBreakpoint fromWidth(double width) {
-    if (width >= extraLarge) return RrBreakpoint.extraLarge;
-    if (width >= large) return RrBreakpoint.large;
-    if (width >= expanded) return RrBreakpoint.expanded;
-    if (width >= medium) return RrBreakpoint.medium;
-    return RrBreakpoint.compact;
+  /// Maps a window [width] to its [ReflowBreakpoint].
+  ReflowBreakpoint fromWidth(double width) {
+    if (width >= extraLarge) return ReflowBreakpoint.extraLarge;
+    if (width >= large) return ReflowBreakpoint.large;
+    if (width >= expanded) return ReflowBreakpoint.expanded;
+    if (width >= medium) return ReflowBreakpoint.medium;
+    return ReflowBreakpoint.compact;
   }
 
   /// Returns the lower-bound width of [breakpoint] under these thresholds.
-  double lowerBoundOf(RrBreakpoint breakpoint) => switch (breakpoint) {
-        RrBreakpoint.compact => 0,
-        RrBreakpoint.medium => medium,
-        RrBreakpoint.expanded => expanded,
-        RrBreakpoint.large => large,
-        RrBreakpoint.extraLarge => extraLarge,
+  double lowerBoundOf(ReflowBreakpoint breakpoint) => switch (breakpoint) {
+        ReflowBreakpoint.compact => 0,
+        ReflowBreakpoint.medium => medium,
+        ReflowBreakpoint.expanded => expanded,
+        ReflowBreakpoint.large => large,
+        ReflowBreakpoint.extraLarge => extraLarge,
       };
 
-  /// Returns the [RrBreakpoints] from the nearest [RrBreakpointsTheme]
+  /// Returns the [ReflowBreakpoints] from the nearest [ReflowBreakpointsTheme]
   /// ancestor, or the Material 3 defaults if none is present.
-  static RrBreakpoints of(BuildContext context) {
-    return RrBreakpointsTheme.maybeOf(context) ?? material3;
+  static ReflowBreakpoints of(BuildContext context) {
+    return ReflowBreakpointsTheme.maybeOf(context) ?? material3;
   }
 
-  RrBreakpoints copyWith({
+  ReflowBreakpoints copyWith({
     double? medium,
     double? expanded,
     double? large,
     double? extraLarge,
   }) {
-    return RrBreakpoints(
+    return ReflowBreakpoints(
       medium: medium ?? this.medium,
       expanded: expanded ?? this.expanded,
       large: large ?? this.large,
@@ -150,7 +150,7 @@ class RrBreakpoints {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RrBreakpoints &&
+      other is ReflowBreakpoints &&
           runtimeType == other.runtimeType &&
           medium == other.medium &&
           expanded == other.expanded &&
@@ -161,48 +161,49 @@ class RrBreakpoints {
   int get hashCode => Object.hash(medium, expanded, large, extraLarge);
 
   @override
-  String toString() => 'RrBreakpoints(medium: $medium, expanded: $expanded, '
+  String toString() =>
+      'ReflowBreakpoints(medium: $medium, expanded: $expanded, '
       'large: $large, extraLarge: $extraLarge)';
 }
 
-/// Provides custom [RrBreakpoints] to a widget subtree.
+/// Provides custom [ReflowBreakpoints] to a widget subtree.
 ///
 /// Place near the root of the app to override the Material 3 default
 /// thresholds everywhere:
 ///
 /// ```dart
-/// RrBreakpointsTheme(
-///   breakpoints: const RrBreakpoints(medium: 560, expanded: 900),
+/// ReflowBreakpointsTheme(
+///   breakpoints: const ReflowBreakpoints(medium: 560, expanded: 900),
 ///   child: MyApp(),
 /// )
 /// ```
-class RrBreakpointsTheme extends InheritedWidget {
-  const RrBreakpointsTheme({
+class ReflowBreakpointsTheme extends InheritedWidget {
+  const ReflowBreakpointsTheme({
     super.key,
     required this.breakpoints,
     required super.child,
   });
 
   /// The thresholds applied to descendants.
-  final RrBreakpoints breakpoints;
+  final ReflowBreakpoints breakpoints;
 
-  /// Returns the nearest ancestor [RrBreakpoints], or null if none.
-  static RrBreakpoints? maybeOf(BuildContext context) {
+  /// Returns the nearest ancestor [ReflowBreakpoints], or null if none.
+  static ReflowBreakpoints? maybeOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<RrBreakpointsTheme>()
+        .dependOnInheritedWidgetOfExactType<ReflowBreakpointsTheme>()
         ?.breakpoints;
   }
 
   @override
-  bool updateShouldNotify(RrBreakpointsTheme oldWidget) =>
+  bool updateShouldNotify(ReflowBreakpointsTheme oldWidget) =>
       breakpoints != oldWidget.breakpoints;
 }
 
 /// Material 3 default width thresholds for quick manual comparisons.
 ///
-/// Prefer [RrBreakpoint.of] or [RrBreakpoints] for layout decisions; these
+/// Prefer [ReflowBreakpoint.of] or [ReflowBreakpoints] for layout decisions; these
 /// constants exist only for rare inline checks.
-abstract final class RrBreakpointWidth {
+abstract final class ReflowBreakpointWidth {
   static const double compact = 0;
   static const double medium = 600;
   static const double expanded = 840;

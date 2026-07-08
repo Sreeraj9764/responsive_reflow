@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'breakpoints.dart';
 import 'spacing.dart';
 
-/// A navigation destination used by [RrAdaptiveScaffold].
-class RrDestination {
-  const RrDestination({
+/// A navigation destination used by [ReflowAdaptiveScaffold].
+class ReflowDestination {
+  const ReflowDestination({
     required this.icon,
     required this.label,
     this.selectedIcon,
@@ -20,14 +20,14 @@ class RrDestination {
   final IconData? selectedIcon;
 }
 
-/// A single item inside a [RrNavSection].
+/// A single item inside a [ReflowNavSection].
 ///
 /// An item is either a **branch** destination (it owns a [branchIndex] and
 /// participates in the selection highlight / bottom bar) or a **link** (it has
 /// an [onTap] and navigates elsewhere without being a shell branch).
-class RrNavItem {
+class ReflowNavItem {
   /// A primary destination backed by a `StatefulShellBranch` index.
-  const RrNavItem.branch({
+  const ReflowNavItem.branch({
     required this.icon,
     required this.label,
     required int this.branchIndex,
@@ -39,7 +39,7 @@ class RrNavItem {
   /// A secondary navigation link (e.g. navigates to an in-shell child page).
   /// Never appears in the compact bottom bar. Pass [selected] to highlight it
   /// based on the current location (e.g. when its child page is active).
-  const RrNavItem.link({
+  const ReflowNavItem.link({
     required this.icon,
     required this.label,
     required VoidCallback this.onTap,
@@ -74,19 +74,19 @@ class RrNavItem {
   bool get isBranch => branchIndex != null;
 }
 
-/// A titled group of [RrNavItem]s rendered in the sidebar / rail.
-class RrNavSection {
-  const RrNavSection({required this.items, this.title});
+/// A titled group of [ReflowNavItem]s rendered in the sidebar / rail.
+class ReflowNavSection {
+  const ReflowNavSection({required this.items, this.title});
 
   /// Optional section header (e.g. "MAIN NAVIGATION"). Hidden when null.
   final String? title;
 
   /// The items in this section.
-  final List<RrNavItem> items;
+  final List<ReflowNavItem> items;
 }
 
 /// How the medium breakpoint (600–839px) renders navigation.
-enum RrMediumNavStyle {
+enum ReflowMediumNavStyle {
   /// A collapsed [NavigationRail] (icons only). Best for a flat destination set.
   rail,
 
@@ -100,8 +100,8 @@ typedef SidebarHeaderBuilder = Widget Function(BuildContext context);
 /// Signature for building sidebar footer content (logout, settings, etc.).
 typedef SidebarFooterBuilder = Widget Function(BuildContext context);
 
-/// Default layout dimensions for [RrAdaptiveScaffold].
-abstract final class RrScaffoldMetrics {
+/// Default layout dimensions for [ReflowAdaptiveScaffold].
+abstract final class ReflowScaffoldMetrics {
   /// Default width of the full sidebar (expanded+).
   static const double sidebarWidth = 260;
 
@@ -125,26 +125,26 @@ abstract final class RrScaffoldMetrics {
 ///
 /// Designed to work with [go_router]'s `StatefulNavigationShell`. Use the
 /// default constructor for a flat list of destinations, or
-/// [RrAdaptiveScaffold.sectioned] for a grouped sidebar that mixes primary
+/// [ReflowAdaptiveScaffold.sectioned] for a grouped sidebar that mixes primary
 /// branch destinations with secondary links.
 ///
 /// ```dart
-/// RrAdaptiveScaffold(
+/// ReflowAdaptiveScaffold(
 ///   destinations: [
-///     RrDestination(icon: Icons.home, label: 'Home'),
-///     RrDestination(icon: Icons.calendar_month, label: 'Schedule'),
+///     ReflowDestination(icon: Icons.home, label: 'Home'),
+///     ReflowDestination(icon: Icons.calendar_month, label: 'Schedule'),
 ///   ],
 ///   currentIndex: navigationShell.currentIndex,
 ///   onDestinationSelected: (i) => navigationShell.goBranch(i),
 ///   body: navigationShell,
 /// )
 /// ```
-class RrAdaptiveScaffold extends StatelessWidget {
+class ReflowAdaptiveScaffold extends StatelessWidget {
   /// Creates an adaptive scaffold from a flat list of [destinations]. The
   /// medium breakpoint renders a [NavigationRail].
-  const RrAdaptiveScaffold({
+  const ReflowAdaptiveScaffold({
     super.key,
-    required List<RrDestination> this.destinations,
+    required List<ReflowDestination> this.destinations,
     required this.currentIndex,
     required this.onDestinationSelected,
     required this.body,
@@ -155,21 +155,21 @@ class RrAdaptiveScaffold extends StatelessWidget {
     this.sidebarHeader,
     this.sidebarFooter,
     this.bottomNavigationBar,
-    this.sidebarWidth = RrScaffoldMetrics.sidebarWidth,
-    this.railWidth = RrScaffoldMetrics.railWidth,
+    this.sidebarWidth = ReflowScaffoldMetrics.sidebarWidth,
+    this.railWidth = ReflowScaffoldMetrics.railWidth,
     this.backgroundColor,
     this.sidebarBackgroundColor,
     this.animateTransitions = true,
   })  : sections = null,
-        mediumNavStyle = RrMediumNavStyle.rail,
+        mediumNavStyle = ReflowMediumNavStyle.rail,
         assert(destinations.length >= 2, 'Provide at least 2 destinations.');
 
   /// Creates an adaptive scaffold from grouped [sections]. The sidebar renders
   /// section headers, primary branch destinations, and secondary links. The
   /// medium breakpoint renders the sidebar by default.
-  const RrAdaptiveScaffold.sectioned({
+  const ReflowAdaptiveScaffold.sectioned({
     super.key,
-    required List<RrNavSection> this.sections,
+    required List<ReflowNavSection> this.sections,
     required this.currentIndex,
     required this.onDestinationSelected,
     required this.body,
@@ -180,9 +180,9 @@ class RrAdaptiveScaffold extends StatelessWidget {
     this.sidebarHeader,
     this.sidebarFooter,
     this.bottomNavigationBar,
-    this.mediumNavStyle = RrMediumNavStyle.sidebar,
-    this.sidebarWidth = RrScaffoldMetrics.sidebarWidth,
-    this.railWidth = RrScaffoldMetrics.railWidth,
+    this.mediumNavStyle = ReflowMediumNavStyle.sidebar,
+    this.sidebarWidth = ReflowScaffoldMetrics.sidebarWidth,
+    this.railWidth = ReflowScaffoldMetrics.railWidth,
     this.backgroundColor,
     this.sidebarBackgroundColor,
     this.animateTransitions = true,
@@ -190,11 +190,11 @@ class RrAdaptiveScaffold extends StatelessWidget {
 
   /// Flat navigation destinations (default constructor). Null when [sections]
   /// is used.
-  final List<RrDestination>? destinations;
+  final List<ReflowDestination>? destinations;
 
   /// Grouped navigation sections (sectioned constructor). Null when
   /// [destinations] is used.
-  final List<RrNavSection>? sections;
+  final List<ReflowNavSection>? sections;
 
   /// Currently selected branch index.
   final int currentIndex;
@@ -230,7 +230,7 @@ class RrAdaptiveScaffold extends StatelessWidget {
   final Widget? bottomNavigationBar;
 
   /// How the medium breakpoint renders navigation (rail or sidebar).
-  final RrMediumNavStyle mediumNavStyle;
+  final ReflowMediumNavStyle mediumNavStyle;
 
   /// Width of the full sidebar in expanded mode.
   final double sidebarWidth;
@@ -249,15 +249,15 @@ class RrAdaptiveScaffold extends StatelessWidget {
   final bool animateTransitions;
 
   /// Normalizes the flat or sectioned configuration to a list of sections.
-  List<RrNavSection> get _resolvedSections {
+  List<ReflowNavSection> get _resolvedSections {
     final sectionsList = sections;
     if (sectionsList != null) return sectionsList;
     final flat = destinations!;
     return [
-      RrNavSection(
+      ReflowNavSection(
         items: [
           for (var i = 0; i < flat.length; i++)
-            RrNavItem.branch(
+            ReflowNavItem.branch(
               icon: flat[i].icon,
               selectedIcon: flat[i].selectedIcon,
               label: flat[i].label,
@@ -270,38 +270,38 @@ class RrAdaptiveScaffold extends StatelessWidget {
   }
 
   /// All branch items, flattened in section order.
-  List<RrNavItem> get _branchItems => [
+  List<ReflowNavItem> get _branchItems => [
         for (final section in _resolvedSections)
           for (final item in section.items)
             if (item.isBranch) item,
       ];
 
   /// Branch items that appear in the compact bottom navigation bar.
-  List<RrNavItem> get _bottomBarItems => [
+  List<ReflowNavItem> get _bottomBarItems => [
         for (final item in _branchItems)
           if (item.showInBottomBar) item
       ];
 
   @override
   Widget build(BuildContext context) {
-    final breakpoint = RrBreakpoint.of(context);
+    final breakpoint = ReflowBreakpoint.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     final layout = switch (breakpoint) {
-      RrBreakpoint.compact => _buildCompactLayout(context, colorScheme),
-      RrBreakpoint.medium => mediumNavStyle == RrMediumNavStyle.rail
+      ReflowBreakpoint.compact => _buildCompactLayout(context, colorScheme),
+      ReflowBreakpoint.medium => mediumNavStyle == ReflowMediumNavStyle.rail
           ? _buildRailLayout(context, colorScheme)
           : _buildSidebarLayout(context, colorScheme),
-      RrBreakpoint.expanded ||
-      RrBreakpoint.large ||
-      RrBreakpoint.extraLarge =>
+      ReflowBreakpoint.expanded ||
+      ReflowBreakpoint.large ||
+      ReflowBreakpoint.extraLarge =>
         _buildSidebarLayout(context, colorScheme),
     };
 
     if (!animateTransitions) return layout;
 
     return AnimatedSwitcher(
-      duration: RrScaffoldMetrics.transitionDuration,
+      duration: ReflowScaffoldMetrics.transitionDuration,
       child: KeyedSubtree(
         key: ValueKey(breakpoint.isDesktopLayout ? 'desktop' : breakpoint.name),
         child: layout,
@@ -386,7 +386,7 @@ class RrAdaptiveScaffold extends StatelessWidget {
       endDrawer: endDrawer,
       body: Row(
         children: [
-          _RrSidebar(
+          _ReflowSidebar(
             sections: _resolvedSections,
             currentIndex: currentIndex,
             onDestinationSelected: onDestinationSelected,
@@ -404,8 +404,8 @@ class RrAdaptiveScaffold extends StatelessWidget {
 }
 
 /// Full sidebar panel with header, sectioned navigation items, and footer.
-class _RrSidebar extends StatelessWidget {
-  const _RrSidebar({
+class _ReflowSidebar extends StatelessWidget {
+  const _ReflowSidebar({
     required this.sections,
     required this.currentIndex,
     required this.onDestinationSelected,
@@ -415,7 +415,7 @@ class _RrSidebar extends StatelessWidget {
     this.footer,
   });
 
-  final List<RrNavSection> sections;
+  final List<ReflowNavSection> sections;
   final int currentIndex;
   final ValueChanged<int> onDestinationSelected;
   final double width;
@@ -442,24 +442,24 @@ class _RrSidebar extends StatelessWidget {
           children: [
             // Header (logo, branding)
             if (header != null) header!(context),
-            if (header != null) const SizedBox(height: RrSpacing.lg),
+            if (header != null) const SizedBox(height: ReflowSpacing.lg),
 
             // Sectioned navigation items
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: RrSpacing.sm,
-                  vertical: RrSpacing.xs,
+                  horizontal: ReflowSpacing.sm,
+                  vertical: ReflowSpacing.xs,
                 ),
                 children: [
                   for (final section in sections) ...[
                     if (section.title != null)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
-                          RrSpacing.md,
-                          RrSpacing.md,
-                          RrSpacing.md,
-                          RrSpacing.xs,
+                          ReflowSpacing.md,
+                          ReflowSpacing.md,
+                          ReflowSpacing.md,
+                          ReflowSpacing.xs,
                         ),
                         child: Text(
                           section.title!,
@@ -504,7 +504,7 @@ class _SidebarTile extends StatelessWidget {
     required this.onBranchSelected,
   });
 
-  final RrNavItem item;
+  final ReflowNavItem item;
   final bool selected;
   final ValueChanged<int> onBranchSelected;
 
@@ -516,18 +516,18 @@ class _SidebarTile extends StatelessWidget {
         selected ? colorScheme.primary : colorScheme.onSurfaceVariant;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: RrSpacing.xxs),
+      padding: const EdgeInsets.symmetric(vertical: ReflowSpacing.xxs),
       child: Material(
         color: Colors.transparent,
         child: ListTile(
           dense: true,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(RrSpacing.sm),
+            borderRadius: BorderRadius.circular(ReflowSpacing.sm),
           ),
           leading: Icon(
             selected ? (item.selectedIcon ?? item.icon) : item.icon,
             color: foreground,
-            size: RrScaffoldMetrics.sidebarIconSize,
+            size: ReflowScaffoldMetrics.sidebarIconSize,
           ),
           title: Text(
             item.label,

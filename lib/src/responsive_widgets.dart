@@ -1,21 +1,21 @@
 import 'package:flutter/widgets.dart';
 import 'breakpoints.dart';
 
-/// Selects a value of type [T] based on the current [RrBreakpoint].
+/// Selects a value of type [T] based on the current [ReflowBreakpoint].
 ///
 /// Provide a [compact] base value and override at larger breakpoints as
 /// needed; smaller-to-larger cascade fallback fills the gaps.
 ///
 /// ```dart
-/// final columns = RrResponsiveValue<int>(
+/// final columns = ReflowResponsiveValue<int>(
 ///   compact: 1,
 ///   medium: 2,
 ///   expanded: 3,
 /// ).resolve(context);
 /// ```
 @immutable
-class RrResponsiveValue<T> {
-  const RrResponsiveValue({
+class ReflowResponsiveValue<T> {
+  const ReflowResponsiveValue({
     required this.compact,
     this.medium,
     this.expanded,
@@ -39,17 +39,17 @@ class RrResponsiveValue<T> {
   final T? extraLarge;
 
   /// Resolves the value for [breakpoint] using cascade fallback.
-  T resolveFor(RrBreakpoint breakpoint) => switch (breakpoint) {
-        RrBreakpoint.extraLarge =>
+  T resolveFor(ReflowBreakpoint breakpoint) => switch (breakpoint) {
+        ReflowBreakpoint.extraLarge =>
           extraLarge ?? large ?? expanded ?? medium ?? compact,
-        RrBreakpoint.large => large ?? expanded ?? medium ?? compact,
-        RrBreakpoint.expanded => expanded ?? medium ?? compact,
-        RrBreakpoint.medium => medium ?? compact,
-        RrBreakpoint.compact => compact,
+        ReflowBreakpoint.large => large ?? expanded ?? medium ?? compact,
+        ReflowBreakpoint.expanded => expanded ?? medium ?? compact,
+        ReflowBreakpoint.medium => medium ?? compact,
+        ReflowBreakpoint.compact => compact,
       };
 
   /// Resolves the value for the current window breakpoint.
-  T resolve(BuildContext context) => resolveFor(RrBreakpoint.of(context));
+  T resolve(BuildContext context) => resolveFor(ReflowBreakpoint.of(context));
 }
 
 /// Shows or hides [child] based on the current breakpoint.
@@ -60,13 +60,13 @@ class RrResponsiveValue<T> {
 ///
 /// ```dart
 /// // Only show on expanded and larger:
-/// RrResponsiveVisibility(
-///   visibleFrom: RrBreakpoint.expanded,
+/// ReflowResponsiveVisibility(
+///   visibleFrom: ReflowBreakpoint.expanded,
 ///   child: SecondaryPanel(),
 /// )
 /// ```
-class RrResponsiveVisibility extends StatelessWidget {
-  const RrResponsiveVisibility({
+class ReflowResponsiveVisibility extends StatelessWidget {
+  const ReflowResponsiveVisibility({
     super.key,
     required this.child,
     this.visibleFrom,
@@ -78,15 +78,15 @@ class RrResponsiveVisibility extends StatelessWidget {
   final Widget child;
 
   /// Inclusive lower bound at which [child] becomes visible.
-  final RrBreakpoint? visibleFrom;
+  final ReflowBreakpoint? visibleFrom;
 
   /// Inclusive lower bound at which [child] becomes hidden again.
-  final RrBreakpoint? hiddenFrom;
+  final ReflowBreakpoint? hiddenFrom;
 
   /// Widget shown while hidden.
   final Widget replacement;
 
-  bool _isVisible(RrBreakpoint bp) {
+  bool _isVisible(ReflowBreakpoint bp) {
     if (visibleFrom != null && bp < visibleFrom!) return false;
     if (hiddenFrom != null && bp >= hiddenFrom!) return false;
     return true;
@@ -94,7 +94,7 @@ class RrResponsiveVisibility extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _isVisible(RrBreakpoint.of(context)) ? child : replacement;
+    return _isVisible(ReflowBreakpoint.of(context)) ? child : replacement;
   }
 }
 
@@ -105,17 +105,17 @@ class RrResponsiveVisibility extends StatelessWidget {
 /// phones but sit side-by-side on tablets and desktops.
 ///
 /// ```dart
-/// RrResponsiveRowColumn(
-///   rowFrom: RrBreakpoint.medium,
-///   spacing: RrSpacing.lg,
+/// ReflowResponsiveRowColumn(
+///   rowFrom: ReflowBreakpoint.medium,
+///   spacing: ReflowSpacing.lg,
 ///   children: [LabelField(), ValueField()],
 /// )
 /// ```
-class RrResponsiveRowColumn extends StatelessWidget {
-  const RrResponsiveRowColumn({
+class ReflowResponsiveRowColumn extends StatelessWidget {
+  const ReflowResponsiveRowColumn({
     super.key,
     required this.children,
-    this.rowFrom = RrBreakpoint.medium,
+    this.rowFrom = ReflowBreakpoint.medium,
     this.spacing = 0,
     this.rowMainAxisAlignment = MainAxisAlignment.start,
     this.rowCrossAxisAlignment = CrossAxisAlignment.center,
@@ -130,7 +130,7 @@ class RrResponsiveRowColumn extends StatelessWidget {
 
   /// Inclusive breakpoint at and above which a [Row] is used; below it a
   /// [Column] is used.
-  final RrBreakpoint rowFrom;
+  final ReflowBreakpoint rowFrom;
 
   /// Gap inserted between children along the active axis.
   final double spacing;
@@ -144,7 +144,7 @@ class RrResponsiveRowColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRow = RrBreakpoint.of(context) >= rowFrom;
+    final isRow = ReflowBreakpoint.of(context) >= rowFrom;
 
     if (isRow) {
       return Row(

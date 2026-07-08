@@ -1,19 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'breakpoints.dart';
 
-/// A builder widget that provides the current [RrBreakpoint] to its child.
+/// A builder widget that provides the current [ReflowBreakpoint] to its child.
 ///
 /// Uses [MediaQuery.sizeOf] (window-level) for efficient rebuilds — only
 /// triggers when the window size changes, not on other MediaQuery changes.
 ///
 /// ```dart
-/// RrResponsiveBuilder(
+/// ReflowResponsiveBuilder(
 ///   compact: (context) => MobileLayout(),
 ///   expanded: (context) => DesktopLayout(),
 /// )
 /// ```
-class RrResponsiveBuilder extends StatelessWidget {
-  const RrResponsiveBuilder({
+class ReflowResponsiveBuilder extends StatelessWidget {
+  const ReflowResponsiveBuilder({
     super.key,
     this.compact,
     this.medium,
@@ -45,13 +45,14 @@ class RrResponsiveBuilder extends StatelessWidget {
   /// Layout for extra large screens (≥1280px). Falls back to [large] → [expanded] → [medium] → [compact].
   final WidgetBuilder? extraLarge;
 
-  /// Generic builder that receives the current [RrBreakpoint].
+  /// Generic builder that receives the current [ReflowBreakpoint].
   /// Used when you need custom logic beyond the per-breakpoint callbacks.
-  final Widget Function(BuildContext context, RrBreakpoint breakpoint)? builder;
+  final Widget Function(BuildContext context, ReflowBreakpoint breakpoint)?
+      builder;
 
   @override
   Widget build(BuildContext context) {
-    final breakpoint = RrBreakpoint.of(context);
+    final breakpoint = ReflowBreakpoint.of(context);
 
     if (builder != null) {
       return builder!(context, breakpoint);
@@ -59,12 +60,12 @@ class RrResponsiveBuilder extends StatelessWidget {
 
     // Cascade fallback: larger breakpoints fall back to smaller ones.
     final resolved = switch (breakpoint) {
-      RrBreakpoint.extraLarge =>
+      ReflowBreakpoint.extraLarge =>
         extraLarge ?? large ?? expanded ?? medium ?? compact,
-      RrBreakpoint.large => large ?? expanded ?? medium ?? compact,
-      RrBreakpoint.expanded => expanded ?? medium ?? compact,
-      RrBreakpoint.medium => medium ?? compact,
-      RrBreakpoint.compact => compact,
+      ReflowBreakpoint.large => large ?? expanded ?? medium ?? compact,
+      ReflowBreakpoint.expanded => expanded ?? medium ?? compact,
+      ReflowBreakpoint.medium => medium ?? compact,
+      ReflowBreakpoint.compact => compact,
     };
 
     assert(resolved != null, 'No layout builder available for $breakpoint');
@@ -79,13 +80,13 @@ class RrResponsiveBuilder extends StatelessWidget {
 /// available space regardless of window size.
 ///
 /// ```dart
-/// RrConstraintResponsiveBuilder(
+/// ReflowConstraintResponsiveBuilder(
 ///   compact: (context, constraints) => CompactCard(),
 ///   expanded: (context, constraints) => WideCard(),
 /// )
 /// ```
-class RrConstraintResponsiveBuilder extends StatelessWidget {
-  const RrConstraintResponsiveBuilder({
+class ReflowConstraintResponsiveBuilder extends StatelessWidget {
+  const ReflowConstraintResponsiveBuilder({
     super.key,
     this.compact,
     this.medium,
@@ -109,15 +110,15 @@ class RrConstraintResponsiveBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final breakpoint = RrBreakpoint.fromWidth(constraints.maxWidth);
+        final breakpoint = ReflowBreakpoint.fromWidth(constraints.maxWidth);
 
         final resolved = switch (breakpoint) {
-          RrBreakpoint.extraLarge ||
-          RrBreakpoint.large =>
+          ReflowBreakpoint.extraLarge ||
+          ReflowBreakpoint.large =>
             large ?? expanded ?? medium ?? compact,
-          RrBreakpoint.expanded => expanded ?? medium ?? compact,
-          RrBreakpoint.medium => medium ?? compact,
-          RrBreakpoint.compact => compact,
+          ReflowBreakpoint.expanded => expanded ?? medium ?? compact,
+          ReflowBreakpoint.medium => medium ?? compact,
+          ReflowBreakpoint.compact => compact,
         };
 
         assert(resolved != null, 'No layout builder for $breakpoint');

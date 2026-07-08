@@ -58,17 +58,17 @@ class ConstrainedContent extends StatelessWidget {
 /// Use this as the root of feature screens.
 ///
 /// ```dart
-/// RrPageContent(
+/// ReflowPageContent(
 ///   child: Column(children: [...]),
 /// )
 /// ```
-class RrPageContent extends StatelessWidget {
-  const RrPageContent({
+class ReflowPageContent extends StatelessWidget {
+  const ReflowPageContent({
     super.key,
     required this.child,
     this.maxWidth = 1200,
     this.padding,
-    this.verticalPadding = RrSpacing.lg,
+    this.verticalPadding = ReflowSpacing.lg,
     this.scrollable = true,
     this.safeArea = true,
     this.storageKey,

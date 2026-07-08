@@ -13,12 +13,12 @@ Future<void> _pumpAt(WidgetTester tester, Size size, Widget child) async {
 }
 
 void main() {
-  group('RrResponsiveBuilder', () {
+  group('ReflowResponsiveBuilder', () {
     testWidgets('selects compact layout on narrow window', (tester) async {
       await _pumpAt(
         tester,
         const Size(500, 800),
-        RrResponsiveBuilder(
+        ReflowResponsiveBuilder(
           compact: (_) => const Text('compact'),
           expanded: (_) => const Text('expanded'),
         ),
@@ -31,7 +31,7 @@ void main() {
       await _pumpAt(
         tester,
         const Size(1000, 800),
-        RrResponsiveBuilder(
+        ReflowResponsiveBuilder(
           compact: (_) => const Text('compact'),
           expanded: (_) => const Text('expanded'),
         ),
@@ -44,7 +44,7 @@ void main() {
       await _pumpAt(
         tester,
         const Size(700, 800), // medium under M3
-        RrResponsiveBuilder(
+        ReflowResponsiveBuilder(
           compact: (_) => const Text('compact'),
           expanded: (_) => const Text('expanded'),
         ),
@@ -56,7 +56,7 @@ void main() {
       await _pumpAt(
         tester,
         const Size(900, 800),
-        RrResponsiveBuilder(
+        ReflowResponsiveBuilder(
           builder: (_, bp) => Text(bp.name),
         ),
       );
@@ -64,7 +64,7 @@ void main() {
     });
   });
 
-  group('RrResponsiveValue', () {
+  group('ReflowResponsiveValue', () {
     testWidgets('resolves cascading values', (tester) async {
       late int columns;
       await _pumpAt(
@@ -72,7 +72,7 @@ void main() {
         const Size(900, 800),
         Builder(
           builder: (context) {
-            columns = const RrResponsiveValue<int>(
+            columns = const ReflowResponsiveValue<int>(
               compact: 1,
               expanded: 3,
             ).resolve(context);
@@ -84,20 +84,20 @@ void main() {
     });
 
     test('resolveFor falls back to smaller breakpoints', () {
-      const value = RrResponsiveValue<int>(compact: 1, medium: 2);
-      expect(value.resolveFor(RrBreakpoint.compact), 1);
-      expect(value.resolveFor(RrBreakpoint.medium), 2);
-      expect(value.resolveFor(RrBreakpoint.large), 2);
+      const value = ReflowResponsiveValue<int>(compact: 1, medium: 2);
+      expect(value.resolveFor(ReflowBreakpoint.compact), 1);
+      expect(value.resolveFor(ReflowBreakpoint.medium), 2);
+      expect(value.resolveFor(ReflowBreakpoint.large), 2);
     });
   });
 
-  group('RrResponsiveVisibility', () {
+  group('ReflowResponsiveVisibility', () {
     testWidgets('hides below visibleFrom', (tester) async {
       await _pumpAt(
         tester,
         const Size(500, 800),
-        const RrResponsiveVisibility(
-          visibleFrom: RrBreakpoint.expanded,
+        const ReflowResponsiveVisibility(
+          visibleFrom: ReflowBreakpoint.expanded,
           child: Text('panel'),
         ),
       );
@@ -108,8 +108,8 @@ void main() {
       await _pumpAt(
         tester,
         const Size(900, 800),
-        const RrResponsiveVisibility(
-          visibleFrom: RrBreakpoint.expanded,
+        const ReflowResponsiveVisibility(
+          visibleFrom: ReflowBreakpoint.expanded,
           child: Text('panel'),
         ),
       );
@@ -117,13 +117,13 @@ void main() {
     });
   });
 
-  group('RrResponsiveRowColumn', () {
+  group('ReflowResponsiveRowColumn', () {
     testWidgets('uses Column below rowFrom', (tester) async {
       await _pumpAt(
         tester,
         const Size(500, 800),
-        const RrResponsiveRowColumn(
-          rowFrom: RrBreakpoint.expanded,
+        const ReflowResponsiveRowColumn(
+          rowFrom: ReflowBreakpoint.expanded,
           children: [Text('a'), Text('b')],
         ),
       );
@@ -135,8 +135,8 @@ void main() {
       await _pumpAt(
         tester,
         const Size(1000, 800),
-        const RrResponsiveRowColumn(
-          rowFrom: RrBreakpoint.expanded,
+        const ReflowResponsiveRowColumn(
+          rowFrom: ReflowBreakpoint.expanded,
           children: [Text('a'), Text('b')],
         ),
       );

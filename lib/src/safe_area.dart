@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 ///
 /// Wrap a `Scaffold.body` (not the whole `Scaffold`) so the app bar keeps
 /// managing its own insets, per the Flutter adaptive guidance.
-class RrSafeArea extends StatelessWidget {
-  const RrSafeArea({
+class ReflowSafeArea extends StatelessWidget {
+  const ReflowSafeArea({
     super.key,
     required this.child,
     this.top = true,
@@ -49,7 +49,7 @@ class RrSafeArea extends StatelessWidget {
 /// Contextual accessors for the common [MediaQuery] inset properties, using the
 /// efficient specialised `*Of` lookups so widgets only rebuild on the relevant
 /// change.
-abstract final class RrInsets {
+abstract final class ReflowInsets {
   /// Partially obscured areas (notches, status bar, rounded corners).
   static EdgeInsets paddingOf(BuildContext context) =>
       MediaQuery.paddingOf(context);

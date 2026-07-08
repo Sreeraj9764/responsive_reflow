@@ -11,10 +11,10 @@ import 'package:flutter/widgets.dart';
 /// EdgeInsets.all(8.w)
 ///
 /// // After:
-/// SizedBox(width: RrSpacing.lg)
-/// EdgeInsets.all(RrSpacing.sm)
+/// SizedBox(width: ReflowSpacing.lg)
+/// EdgeInsets.all(ReflowSpacing.sm)
 /// ```
-abstract final class RrSpacing {
+abstract final class ReflowSpacing {
   /// 2.0 — hairline spacing
   static const double xxs = 2.0;
 
@@ -49,88 +49,91 @@ abstract final class RrSpacing {
   static const double xxxxl = 64.0;
 }
 
-/// Convenience [EdgeInsets] factories using [RrSpacing] tokens.
-abstract final class RrEdgeInsets {
+/// Convenience [EdgeInsets] factories using [ReflowSpacing] tokens.
+abstract final class ReflowEdgeInsets {
   // --- All sides ---
-  static const EdgeInsets allXs = EdgeInsets.all(RrSpacing.xs);
-  static const EdgeInsets allSm = EdgeInsets.all(RrSpacing.sm);
-  static const EdgeInsets allMd = EdgeInsets.all(RrSpacing.md);
-  static const EdgeInsets allLg = EdgeInsets.all(RrSpacing.lg);
-  static const EdgeInsets allLgPlus = EdgeInsets.all(RrSpacing.lgPlus);
-  static const EdgeInsets allXl = EdgeInsets.all(RrSpacing.xl);
-  static const EdgeInsets allXxl = EdgeInsets.all(RrSpacing.xxl);
+  static const EdgeInsets allXs = EdgeInsets.all(ReflowSpacing.xs);
+  static const EdgeInsets allSm = EdgeInsets.all(ReflowSpacing.sm);
+  static const EdgeInsets allMd = EdgeInsets.all(ReflowSpacing.md);
+  static const EdgeInsets allLg = EdgeInsets.all(ReflowSpacing.lg);
+  static const EdgeInsets allLgPlus = EdgeInsets.all(ReflowSpacing.lgPlus);
+  static const EdgeInsets allXl = EdgeInsets.all(ReflowSpacing.xl);
+  static const EdgeInsets allXxl = EdgeInsets.all(ReflowSpacing.xxl);
 
   // --- Horizontal ---
   static const EdgeInsets horizontalXs =
-      EdgeInsets.symmetric(horizontal: RrSpacing.xs);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.xs);
   static const EdgeInsets horizontalSm =
-      EdgeInsets.symmetric(horizontal: RrSpacing.sm);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.sm);
   static const EdgeInsets horizontalMd =
-      EdgeInsets.symmetric(horizontal: RrSpacing.md);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.md);
   static const EdgeInsets horizontalLg =
-      EdgeInsets.symmetric(horizontal: RrSpacing.lg);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.lg);
   static const EdgeInsets horizontalLgPlus =
-      EdgeInsets.symmetric(horizontal: RrSpacing.lgPlus);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.lgPlus);
   static const EdgeInsets horizontalXl =
-      EdgeInsets.symmetric(horizontal: RrSpacing.xl);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.xl);
   static const EdgeInsets horizontalXxl =
-      EdgeInsets.symmetric(horizontal: RrSpacing.xxl);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.xxl);
 
   // --- Vertical ---
   static const EdgeInsets verticalXs =
-      EdgeInsets.symmetric(vertical: RrSpacing.xs);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.xs);
   static const EdgeInsets verticalSm =
-      EdgeInsets.symmetric(vertical: RrSpacing.sm);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.sm);
   static const EdgeInsets verticalMd =
-      EdgeInsets.symmetric(vertical: RrSpacing.md);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.md);
   static const EdgeInsets verticalLg =
-      EdgeInsets.symmetric(vertical: RrSpacing.lg);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.lg);
   static const EdgeInsets verticalLgPlus =
-      EdgeInsets.symmetric(vertical: RrSpacing.lgPlus);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.lgPlus);
   static const EdgeInsets verticalXl =
-      EdgeInsets.symmetric(vertical: RrSpacing.xl);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.xl);
   static const EdgeInsets verticalXxl =
-      EdgeInsets.symmetric(vertical: RrSpacing.xxl);
+      EdgeInsets.symmetric(vertical: ReflowSpacing.xxl);
 }
 
-/// Convenience [SizedBox] gap widgets using [RrSpacing] tokens.
+/// Convenience [SizedBox] gap widgets using [ReflowSpacing] tokens.
 ///
 /// Usage:
 /// ```dart
 /// Column(children: [
 ///   Text('Hello'),
-///   RrGap.verticalSm,
+///   ReflowGap.verticalSm,
 ///   Text('World'),
 /// ])
 /// ```
-abstract final class RrGap {
+abstract final class ReflowGap {
   // --- Vertical gaps ---
-  static const SizedBox verticalXxs = SizedBox(height: RrSpacing.xxs);
-  static const SizedBox verticalXs = SizedBox(height: RrSpacing.xs);
-  static const SizedBox verticalSm = SizedBox(height: RrSpacing.sm);
-  static const SizedBox verticalMd = SizedBox(height: RrSpacing.md);
-  static const SizedBox verticalLg = SizedBox(height: RrSpacing.lg);
-  static const SizedBox verticalLgPlus = SizedBox(height: RrSpacing.lgPlus);
-  static const SizedBox verticalXl = SizedBox(height: RrSpacing.xl);
-  static const SizedBox verticalXxl = SizedBox(height: RrSpacing.xxl);
-  static const SizedBox verticalXxlPlus = SizedBox(height: RrSpacing.xxlPlus);
-  static const SizedBox verticalXxxl = SizedBox(height: RrSpacing.xxxl);
+  static const SizedBox verticalXxs = SizedBox(height: ReflowSpacing.xxs);
+  static const SizedBox verticalXs = SizedBox(height: ReflowSpacing.xs);
+  static const SizedBox verticalSm = SizedBox(height: ReflowSpacing.sm);
+  static const SizedBox verticalMd = SizedBox(height: ReflowSpacing.md);
+  static const SizedBox verticalLg = SizedBox(height: ReflowSpacing.lg);
+  static const SizedBox verticalLgPlus = SizedBox(height: ReflowSpacing.lgPlus);
+  static const SizedBox verticalXl = SizedBox(height: ReflowSpacing.xl);
+  static const SizedBox verticalXxl = SizedBox(height: ReflowSpacing.xxl);
+  static const SizedBox verticalXxlPlus =
+      SizedBox(height: ReflowSpacing.xxlPlus);
+  static const SizedBox verticalXxxl = SizedBox(height: ReflowSpacing.xxxl);
 
   // --- Horizontal gaps ---
-  static const SizedBox horizontalXxs = SizedBox(width: RrSpacing.xxs);
-  static const SizedBox horizontalXs = SizedBox(width: RrSpacing.xs);
-  static const SizedBox horizontalSm = SizedBox(width: RrSpacing.sm);
-  static const SizedBox horizontalMd = SizedBox(width: RrSpacing.md);
-  static const SizedBox horizontalLg = SizedBox(width: RrSpacing.lg);
-  static const SizedBox horizontalLgPlus = SizedBox(width: RrSpacing.lgPlus);
-  static const SizedBox horizontalXl = SizedBox(width: RrSpacing.xl);
-  static const SizedBox horizontalXxl = SizedBox(width: RrSpacing.xxl);
-  static const SizedBox horizontalXxlPlus = SizedBox(width: RrSpacing.xxlPlus);
-  static const SizedBox horizontalXxxl = SizedBox(width: RrSpacing.xxxl);
+  static const SizedBox horizontalXxs = SizedBox(width: ReflowSpacing.xxs);
+  static const SizedBox horizontalXs = SizedBox(width: ReflowSpacing.xs);
+  static const SizedBox horizontalSm = SizedBox(width: ReflowSpacing.sm);
+  static const SizedBox horizontalMd = SizedBox(width: ReflowSpacing.md);
+  static const SizedBox horizontalLg = SizedBox(width: ReflowSpacing.lg);
+  static const SizedBox horizontalLgPlus =
+      SizedBox(width: ReflowSpacing.lgPlus);
+  static const SizedBox horizontalXl = SizedBox(width: ReflowSpacing.xl);
+  static const SizedBox horizontalXxl = SizedBox(width: ReflowSpacing.xxl);
+  static const SizedBox horizontalXxlPlus =
+      SizedBox(width: ReflowSpacing.xxlPlus);
+  static const SizedBox horizontalXxxl = SizedBox(width: ReflowSpacing.xxxl);
 }
 
 /// Common border radius values.
-abstract final class RrRadius {
+abstract final class ReflowRadius {
   static const double xs = 2.0;
   static const double sm = 4.0;
   static const double md = 8.0;

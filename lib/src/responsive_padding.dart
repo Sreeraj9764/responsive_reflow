@@ -7,12 +7,12 @@ import 'spacing.dart';
 /// Larger screens get more padding, smaller screens get less.
 ///
 /// ```dart
-/// RrResponsivePadding(
+/// ReflowResponsivePadding(
 ///   child: MyContent(),
 /// )
 /// ```
-class RrResponsivePadding extends StatelessWidget {
-  const RrResponsivePadding({
+class ReflowResponsivePadding extends StatelessWidget {
+  const ReflowResponsivePadding({
     super.key,
     required this.child,
     this.compact,
@@ -35,21 +35,26 @@ class RrResponsivePadding extends StatelessWidget {
   /// Padding for large/extra-large screens. Defaults to horizontal 48.
   final EdgeInsetsGeometry? large;
 
-  static const _defaultCompact = EdgeInsets.symmetric(horizontal: RrSpacing.lg);
-  static const _defaultMedium = EdgeInsets.symmetric(horizontal: RrSpacing.xl);
+  static const _defaultCompact =
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.lg);
+  static const _defaultMedium =
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.xl);
   static const _defaultExpanded =
-      EdgeInsets.symmetric(horizontal: RrSpacing.xxl);
-  static const _defaultLarge = EdgeInsets.symmetric(horizontal: RrSpacing.xxxl);
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.xxl);
+  static const _defaultLarge =
+      EdgeInsets.symmetric(horizontal: ReflowSpacing.xxxl);
 
   @override
   Widget build(BuildContext context) {
-    final breakpoint = RrBreakpoint.of(context);
+    final breakpoint = ReflowBreakpoint.of(context);
 
     final padding = switch (breakpoint) {
-      RrBreakpoint.extraLarge || RrBreakpoint.large => large ?? _defaultLarge,
-      RrBreakpoint.expanded => expanded ?? _defaultExpanded,
-      RrBreakpoint.medium => medium ?? _defaultMedium,
-      RrBreakpoint.compact => compact ?? _defaultCompact,
+      ReflowBreakpoint.extraLarge ||
+      ReflowBreakpoint.large =>
+        large ?? _defaultLarge,
+      ReflowBreakpoint.expanded => expanded ?? _defaultExpanded,
+      ReflowBreakpoint.medium => medium ?? _defaultMedium,
+      ReflowBreakpoint.compact => compact ?? _defaultCompact,
     };
 
     return Padding(padding: padding, child: child);
@@ -58,11 +63,11 @@ class RrResponsivePadding extends StatelessWidget {
 
 /// Returns breakpoint-appropriate horizontal padding value.
 double gsResponsiveHorizontalPadding(BuildContext context) {
-  final breakpoint = RrBreakpoint.of(context);
+  final breakpoint = ReflowBreakpoint.of(context);
   return switch (breakpoint) {
-    RrBreakpoint.extraLarge || RrBreakpoint.large => RrSpacing.xxxl,
-    RrBreakpoint.expanded => RrSpacing.xxl,
-    RrBreakpoint.medium => RrSpacing.xl,
-    RrBreakpoint.compact => RrSpacing.lg,
+    ReflowBreakpoint.extraLarge || ReflowBreakpoint.large => ReflowSpacing.xxxl,
+    ReflowBreakpoint.expanded => ReflowSpacing.xxl,
+    ReflowBreakpoint.medium => ReflowSpacing.xl,
+    ReflowBreakpoint.compact => ReflowSpacing.lg,
   };
 }

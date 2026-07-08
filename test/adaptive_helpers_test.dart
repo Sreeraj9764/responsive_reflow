@@ -3,25 +3,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:responsive_reflow/responsive_reflow.dart';
 
 void main() {
-  group('RrDensity', () {
+  group('ReflowDensity', () {
     test('maps platforms to input modes', () {
-      expect(RrDensity.inputModeFor(TargetPlatform.android), RrInputMode.touch);
-      expect(RrDensity.inputModeFor(TargetPlatform.iOS), RrInputMode.touch);
-      expect(RrDensity.inputModeFor(TargetPlatform.macOS), RrInputMode.pointer);
-      expect(
-          RrDensity.inputModeFor(TargetPlatform.windows), RrInputMode.pointer);
+      expect(ReflowDensity.inputModeFor(TargetPlatform.android),
+          ReflowInputMode.touch);
+      expect(ReflowDensity.inputModeFor(TargetPlatform.iOS),
+          ReflowInputMode.touch);
+      expect(ReflowDensity.inputModeFor(TargetPlatform.macOS),
+          ReflowInputMode.pointer);
+      expect(ReflowDensity.inputModeFor(TargetPlatform.windows),
+          ReflowInputMode.pointer);
     });
 
     test('density for touch is standard, pointer is compact', () {
-      expect(RrDensity.densityFor(RrInputMode.touch), VisualDensity.standard);
-      final pointer = RrDensity.densityFor(RrInputMode.pointer);
+      expect(ReflowDensity.densityFor(ReflowInputMode.touch),
+          VisualDensity.standard);
+      final pointer = ReflowDensity.densityFor(ReflowInputMode.pointer);
       expect(pointer.horizontal, -1);
       expect(pointer.vertical, -1);
     });
   });
 
-  group('RrPolicy', () {
-    const policy = RrPolicy();
+  group('ReflowPolicy', () {
+    const policy = ReflowPolicy();
 
     test('size-based decisions follow Material 3 thresholds', () {
       expect(policy.shouldUseNavRail(599), isFalse);
@@ -32,7 +36,7 @@ void main() {
     });
 
     test('respects custom breakpoints', () {
-      const custom = RrPolicy(breakpoints: RrBreakpoints(medium: 500));
+      const custom = ReflowPolicy(breakpoints: ReflowBreakpoints(medium: 500));
       expect(custom.shouldUseNavRail(500), isTrue);
       expect(custom.shouldUseNavRail(499), isFalse);
     });
@@ -44,7 +48,7 @@ void main() {
           data: const MediaQueryData(size: Size(700, 800)),
           child: Builder(
             builder: (context) {
-              rail = const RrPolicy().shouldUseNavRailOf(context);
+              rail = const ReflowPolicy().shouldUseNavRailOf(context);
               return const SizedBox();
             },
           ),

@@ -1,6 +1,6 @@
 # responsive_reflow example
 
-A minimal app showing `RrAdaptiveScaffold`, `RrResponsiveGrid`, `RrPageContent`,
+A minimal app showing `ReflowAdaptiveScaffold`, `ReflowResponsiveGrid`, `ReflowPageContent`,
 and spacing tokens from `responsive_reflow`.
 
 ```sh

@@ -11,12 +11,12 @@ Future<void> _pumpAt(WidgetTester tester, Size size, Widget child) async {
 }
 
 const _destinations = [
-  RrDestination(icon: Icons.home, label: 'Home'),
-  RrDestination(icon: Icons.search, label: 'Search'),
-  RrDestination(icon: Icons.person, label: 'Profile'),
+  ReflowDestination(icon: Icons.home, label: 'Home'),
+  ReflowDestination(icon: Icons.search, label: 'Search'),
+  ReflowDestination(icon: Icons.person, label: 'Profile'),
 ];
 
-Widget _scaffold() => RrAdaptiveScaffold(
+Widget _scaffold() => ReflowAdaptiveScaffold(
       destinations: _destinations,
       currentIndex: 0,
       onDestinationSelected: (_) {},
@@ -25,7 +25,7 @@ Widget _scaffold() => RrAdaptiveScaffold(
     );
 
 void main() {
-  group('RrAdaptiveScaffold navigation pattern switching', () {
+  group('ReflowAdaptiveScaffold navigation pattern switching', () {
     testWidgets('compact window shows a bottom NavigationBar', (tester) async {
       await _pumpAt(tester, const Size(500, 900), _scaffold());
       expect(find.byType(NavigationBar), findsOneWidget);
@@ -51,7 +51,7 @@ void main() {
       await _pumpAt(
         tester,
         const Size(500, 900),
-        RrAdaptiveScaffold(
+        ReflowAdaptiveScaffold(
           destinations: _destinations,
           currentIndex: 0,
           onDestinationSelected: (_) {},
@@ -67,17 +67,17 @@ void main() {
     });
   });
 
-  group('RrAdaptiveScaffold.sectioned', () {
+  group('ReflowAdaptiveScaffold.sectioned', () {
     final sections = [
-      const RrNavSection(
+      const ReflowNavSection(
         title: 'MAIN',
         items: [
-          RrNavItem.branch(
+          ReflowNavItem.branch(
               icon: Icons.home,
               label: 'Home',
               branchIndex: 0,
               showInBottomBar: true),
-          RrNavItem.branch(
+          ReflowNavItem.branch(
               icon: Icons.event,
               label: 'Schedule',
               branchIndex: 1,
@@ -91,13 +91,13 @@ void main() {
       Widget? bottomNavigationBar,
       VoidCallback? onLink,
     }) =>
-        RrAdaptiveScaffold.sectioned(
+        ReflowAdaptiveScaffold.sectioned(
           sections: [
             ...sections,
-            RrNavSection(
+            ReflowNavSection(
               title: 'SUPPORT',
               items: [
-                RrNavItem.link(
+                ReflowNavItem.link(
                   icon: Icons.settings,
                   label: 'Settings',
                   onTap: onLink ?? () {},
@@ -161,13 +161,13 @@ void main() {
     });
   });
 
-  group('RrResponsiveGrid', () {
+  group('ReflowResponsiveGrid', () {
     testWidgets('renders more columns on wider windows', (tester) async {
       Future<int> columnCountFor(Size size) async {
         await _pumpAt(
           tester,
           size,
-          RrResponsiveGrid(
+          ReflowResponsiveGrid(
             maxItemWidth: 200,
             children: List.generate(
               12,
@@ -192,7 +192,7 @@ void main() {
       await _pumpAt(
         tester,
         const Size(800, 600),
-        RrResponsiveGrid.builder(
+        ReflowResponsiveGrid.builder(
           maxItemWidth: 200,
           itemCount: 100,
           itemBuilder: (context, index) =>
@@ -205,13 +205,13 @@ void main() {
     });
   });
 
-  group('RrPageContent', () {
+  group('ReflowPageContent', () {
     testWidgets('wraps content in a SafeArea and constrains width',
         (tester) async {
       await _pumpAt(
         tester,
         const Size(2000, 900),
-        const RrPageContent(
+        const ReflowPageContent(
           maxWidth: 800,
           child: Text('content'),
         ),
@@ -222,7 +222,7 @@ void main() {
       final constrained = tester.widget<ConstrainedBox>(
         find
             .descendant(
-              of: find.byType(RrPageContent),
+              of: find.byType(ReflowPageContent),
               matching: find.byType(ConstrainedBox),
             )
             .first,
@@ -234,7 +234,7 @@ void main() {
       await _pumpAt(
         tester,
         const Size(500, 900),
-        const RrPageContent(
+        const ReflowPageContent(
           scrollable: false,
           child: Text('content'),
         ),

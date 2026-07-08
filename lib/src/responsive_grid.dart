@@ -9,21 +9,21 @@ import 'spacing.dart';
 /// large-screen guidance.
 ///
 /// ```dart
-/// RrResponsiveGrid(
+/// ReflowResponsiveGrid(
 ///   maxItemWidth: 300,
 ///   children: items.map((i) => ItemCard(i)).toList(),
 /// )
 /// ```
 ///
-/// For long lists, prefer [RrResponsiveGrid.builder] so only visible items
+/// For long lists, prefer [ReflowResponsiveGrid.builder] so only visible items
 /// are built.
-class RrResponsiveGrid extends StatelessWidget {
-  const RrResponsiveGrid({
+class ReflowResponsiveGrid extends StatelessWidget {
+  const ReflowResponsiveGrid({
     super.key,
     required this.children,
     this.maxItemWidth = 300,
-    this.mainAxisSpacing = RrSpacing.lg,
-    this.crossAxisSpacing = RrSpacing.lg,
+    this.mainAxisSpacing = ReflowSpacing.lg,
+    this.crossAxisSpacing = ReflowSpacing.lg,
     this.childAspectRatio = 1.0,
     this.padding,
     this.shrinkWrap = false,
@@ -34,26 +34,26 @@ class RrResponsiveGrid extends StatelessWidget {
   /// Lazy variant that builds only the visible items via [itemBuilder].
   ///
   /// Use this for large collections to avoid building every item up front.
-  const RrResponsiveGrid.builder({
+  const ReflowResponsiveGrid.builder({
     super.key,
     required int this.itemCount,
     required Widget Function(BuildContext context, int index) this.itemBuilder,
     this.maxItemWidth = 300,
-    this.mainAxisSpacing = RrSpacing.lg,
-    this.crossAxisSpacing = RrSpacing.lg,
+    this.mainAxisSpacing = ReflowSpacing.lg,
+    this.crossAxisSpacing = ReflowSpacing.lg,
     this.childAspectRatio = 1.0,
     this.padding,
     this.shrinkWrap = false,
     this.physics,
   }) : children = const [];
 
-  /// Grid items (eager constructor). Empty for [RrResponsiveGrid.builder].
+  /// Grid items (eager constructor). Empty for [ReflowResponsiveGrid.builder].
   final List<Widget> children;
 
-  /// Number of items for the lazy [RrResponsiveGrid.builder] constructor.
+  /// Number of items for the lazy [ReflowResponsiveGrid.builder] constructor.
   final int? itemCount;
 
-  /// Item builder for the lazy [RrResponsiveGrid.builder] constructor.
+  /// Item builder for the lazy [ReflowResponsiveGrid.builder] constructor.
   final Widget Function(BuildContext context, int index)? itemBuilder;
 
   /// Maximum width for each grid item. Columns auto-calculated.
@@ -97,14 +97,14 @@ class RrResponsiveGrid extends StatelessWidget {
   }
 }
 
-/// A sliver version of [RrResponsiveGrid] for use inside [CustomScrollView].
-class RrResponsiveSliverGrid extends StatelessWidget {
-  const RrResponsiveSliverGrid({
+/// A sliver version of [ReflowResponsiveGrid] for use inside [CustomScrollView].
+class ReflowResponsiveSliverGrid extends StatelessWidget {
+  const ReflowResponsiveSliverGrid({
     super.key,
     required this.delegate,
     this.maxItemWidth = 300,
-    this.mainAxisSpacing = RrSpacing.lg,
-    this.crossAxisSpacing = RrSpacing.lg,
+    this.mainAxisSpacing = ReflowSpacing.lg,
+    this.crossAxisSpacing = ReflowSpacing.lg,
     this.childAspectRatio = 1.0,
   });
 
