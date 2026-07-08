@@ -2,7 +2,7 @@ name: responsive_reflow
 description: >-
   Responsive & adaptive Flutter layout utilities: Material 3 breakpoints,
   spacing tokens, adaptive scaffold, and foldable-aware helpers.
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/Sreeraj9764/responsive_reflow
 repository: https://github.com/Sreeraj9764/responsive_reflow
 issue_tracker: https://github.com/Sreeraj9764/responsive_reflow/issues
