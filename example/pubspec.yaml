@@ -8,12 +8,16 @@ environment:
   flutter: ">=3.27.0"
 
 dependencies:
+  auto_route: ^11.1.0
   flutter:
     sdk: flutter
+  go_router: ^17.3.0
   responsive_reflow:
     path: ../
 
 dev_dependencies:
+  auto_route_generator: ^10.5.0
+  build_runner: ^2.15.0
   flutter_lints: ^5.0.0
 
 flutter:

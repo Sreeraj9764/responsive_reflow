@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_reflow/responsive_reflow.dart';
 
+import 'shared/demo_data.dart';
+import 'shared/pages.dart';
+
+// Basics showcase — every core widget, no router packages.
+//
+// Also see the router integrations (run with `flutter run -t`):
+//   lib/go_router_app/main.dart   — StatefulShellRoute + deep-linkable inbox
+//   lib/auto_route_app/main.dart  — AutoTabsRouter mapped to the scaffold
 void main() => runApp(const ExampleApp());
 
 class ExampleApp extends StatelessWidget {
@@ -11,6 +19,17 @@ class ExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'responsive_reflow example',
       theme: ThemeData(useMaterial3: true),
+      // Install once, above the Navigator: tune hit-target density to the
+      // pointer the user is ACTUALLY using (e.g. a mouse plugged into a
+      // tablet), not the device type.
+      builder: (context, child) => ReflowPointerModeDetector(
+        builder: (context, mode) => Theme(
+          data: Theme.of(context).copyWith(
+            visualDensity: ReflowDensity.densityFor(mode),
+          ),
+          child: child!,
+        ),
+      ),
       home: const HomePage(),
     );
   }
@@ -18,11 +37,13 @@ class ExampleApp extends StatelessWidget {
 
 /// Demonstrates the package end to end — all width-driven, never scaled:
 ///
-/// - [ReflowAdaptiveScaffold.sectioned] (bottom nav → sidebar) with branch
-///   destinations and a secondary link,
-/// - a fold-aware `secondaryBody` split view,
+/// - [ReflowAdaptiveScaffold.sectioned] (bottom nav → rail → sidebar) with
+///   branch destinations and a secondary link,
+/// - an adaptive inbox: full-screen detail on compact, fold-aware
+///   `secondaryBody` split view on expanded+,
 /// - [ReflowResponsiveGrid] with per-breakpoint column overrides,
 /// - [ReflowConstraintResponsiveBuilder] inside a reusable card,
+/// - a settings form with [ConstrainedContent] and keyboard-inset handling,
 /// - the `context.reflow` extension and spacing tokens.
 ///
 /// Run on desktop and resize the window through all breakpoints.
@@ -35,6 +56,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 0;
+  String? _selectedMessageId;
+
+  void _openMessage(BuildContext context, String id) {
+    if (context.reflow.isDesktopLayout) {
+      // Wide window: show the detail in the secondary pane.
+      setState(() => _selectedMessageId = id);
+    } else {
+      // Phone-sized window: push the detail as its own screen.
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => Scaffold(
+            appBar: AppBar(title: Text(messageById(id)?.subject ?? 'Message')),
+            body: MessageDetailPane(message: messageById(id)),
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +89,14 @@ class _HomePageState extends State<HomePage> {
               showInBottomBar: true,
             ),
             ReflowNavItem.branch(
-              icon: Icons.grid_view_outlined,
-              label: 'Grid',
+              icon: Icons.inbox_outlined,
+              label: 'Inbox',
               branchIndex: 1,
               showInBottomBar: true,
             ),
             ReflowNavItem.branch(
-              icon: Icons.view_sidebar_outlined,
-              label: 'Split view',
+              icon: Icons.settings_outlined,
+              label: 'Settings',
               branchIndex: 2,
               showInBottomBar: true,
             ),
@@ -86,153 +125,22 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
       ),
-      // The split view only appears on the third destination.
-      secondaryBody: _index == 2 ? const _DetailPane() : null,
-      bodyRatio: 0.45,
+      // The split view only appears on the Inbox destination, and only on
+      // expanded+ windows (fold-aware on foldables).
+      secondaryBody: _index == 1
+          ? MessageDetailPane(message: messageById(_selectedMessageId))
+          : null,
+      bodyRatio: 0.4,
       body: switch (_index) {
-        0 => const _DashboardPage(),
-        1 => const _GridPage(),
-        _ => const _ListPane(),
-      },
-    );
-  }
-}
-
-/// Shows the `context.reflow` extension and breakpoint-aware page padding.
-class _DashboardPage extends StatelessWidget {
-  const _DashboardPage();
-
-  @override
-  Widget build(BuildContext context) {
-    final reflow = context.reflow;
-    return ReflowPageContent(
-      maxWidth: 1000,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Window info', style: Theme.of(context).textTheme.titleLarge),
-          ReflowGap.verticalLg,
-          Card(
-            child: Padding(
-              padding: ReflowEdgeInsets.allLg,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Breakpoint: ${reflow.breakpoint.name}'),
-                  Text('Width: ${reflow.width.toStringAsFixed(0)}px'),
-                  Text('M3 margin: ${reflow.margin}px'),
-                  Text('Desktop-like: ${reflow.isDesktopLayout}'),
-                  Text('Input mode: ${reflow.inputMode.name}'),
-                  Text('Vertical fold: ${reflow.hasVerticalFold}'),
-                ],
-              ),
+        0 => const DashboardPage(),
+        1 => Builder(
+            builder: (context) => InboxListPane(
+              selectedId: _selectedMessageId,
+              onMessageSelected: (id) => _openMessage(context, id),
             ),
           ),
-          ReflowGap.verticalLg,
-          // A reusable component that adapts to ITS OWN constraints — it
-          // renders differently here vs inside a narrow pane.
-          const _AdaptiveInfoCard(),
-        ],
-      ),
-    );
-  }
-}
-
-/// A reusable card that branches on parent constraints, not the window.
-class _AdaptiveInfoCard extends StatelessWidget {
-  const _AdaptiveInfoCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: ReflowEdgeInsets.allLg,
-        child: ReflowConstraintResponsiveBuilder(
-          compact: (context, constraints) => const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.swap_horiz),
-              ReflowGap.verticalSm,
-              Text('Narrow parent → stacked layout'),
-            ],
-          ),
-          medium: (context, constraints) => const Row(
-            children: [
-              Icon(Icons.swap_horiz),
-              ReflowGap.horizontalLg,
-              Expanded(child: Text('Wide parent → side-by-side layout')),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Grid with per-breakpoint column overrides and lazy building.
-class _GridPage extends StatelessWidget {
-  const _GridPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return ReflowPageContent(
-      maxWidth: 1200,
-      scrollable: false,
-      child: ReflowResponsiveGrid.builder(
-        columns: const ReflowResponsiveValue(
-          compact: 1,
-          medium: 2,
-          expanded: 3,
-          large: 4,
-        ),
-        itemCount: 24,
-        itemBuilder: (context, i) => Card(
-          child: Padding(
-            padding: ReflowEdgeInsets.allLg,
-            child: Center(child: Text('Item ${i + 1}')),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Primary pane of the split view (list side).
-class _ListPane extends StatelessWidget {
-  const _ListPane();
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 20,
-      itemBuilder: (context, i) => ListTile(
-        leading: const Icon(Icons.mail_outline),
-        title: Text('Conversation ${i + 1}'),
-        subtitle: const Text('On expanded+ windows the detail pane '
-            'appears to the right.'),
-      ),
-    );
-  }
-}
-
-/// Secondary pane of the split view (detail side). Hidden on compact/medium.
-class _DetailPane extends StatelessWidget {
-  const _DetailPane();
-
-  @override
-  Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: const Center(
-        child: Padding(
-          padding: ReflowEdgeInsets.allXl,
-          child: Text(
-            'Detail pane\n\nVisible on expanded+ windows only. '
-            'On a foldable, the panes split at the hinge.',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
+        _ => const SettingsPage(),
+      },
     );
   }
 }

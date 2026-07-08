@@ -268,6 +268,14 @@ illustrative — this package has **no dependency on go_router**; it works with
 any routing solution (or none) because the scaffold only needs an index and a
 callback.
 
+Every recipe here is also available as a **runnable app** in
+[example/](example/README.md):
+[example/lib/main.dart](example/lib/main.dart) (basics, no router),
+[example/lib/go_router_app/main.dart](example/lib/go_router_app/main.dart)
+(deep-linkable adaptive shell), and
+[example/lib/auto_route_app/main.dart](example/lib/auto_route_app/main.dart)
+(`AutoTabsRouter`).
+
 ### go_router: adaptive shell with StatefulShellRoute
 
 `ReflowAdaptiveScaffold` was designed to be the shell of a
